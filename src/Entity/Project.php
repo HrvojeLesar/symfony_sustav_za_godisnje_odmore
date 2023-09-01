@@ -49,9 +49,9 @@ class Project
         return $this->projectLead;
     }
 
-    public function setProjectLead(?User $project_lead): static
+    public function setProjectLead(?User $projectLead): static
     {
-        $this->projectLead = $project_lead;
+        $this->projectLead = $projectLead;
 
         return $this;
     }
@@ -92,7 +92,7 @@ class Project
     {
         if (!$this->projectTeams->contains($projectTeam)) {
             $this->projectTeams->add($projectTeam);
-            $projectTeam->setProjectId($this);
+            $projectTeam->setProject($this);
         }
 
         return $this;
@@ -102,8 +102,8 @@ class Project
     {
         if ($this->projectTeams->removeElement($projectTeam)) {
             // set the owning side to null (unless already changed)
-            if ($projectTeam->getProjectId() === $this) {
-                $projectTeam->setProjectId(null);
+            if ($projectTeam->getProject() === $this) {
+                $projectTeam->setProject(null);
             }
         }
 

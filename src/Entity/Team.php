@@ -76,7 +76,7 @@ class Team
     {
         if (!$this->teamMembers->contains($teamMember)) {
             $this->teamMembers->add($teamMember);
-            $teamMember->setTeamId($this);
+            $teamMember->setTeam($this);
         }
 
         return $this;
@@ -86,8 +86,8 @@ class Team
     {
         if ($this->teamMembers->removeElement($teamMember)) {
             // set the owning side to null (unless already changed)
-            if ($teamMember->getTeamId() === $this) {
-                $teamMember->setTeamId(null);
+            if ($teamMember->getTeam() === $this) {
+                $teamMember->setTeam(null);
             }
         }
 

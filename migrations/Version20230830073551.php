@@ -78,6 +78,22 @@ final class Version20230830073551 extends AbstractMigration
 
         $this->addSql(
             '
+            CREATE TABLE vacation_request_approval (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                approved_by_team_lead_id INT NOT NULL REFERENCES user(id),
+                approved_by_project_lead_id INT NOT NULL REFERENCES user(id),
+                is_approved_by_team_lead BOOLEAN,
+                is_approved_by_project_lead BOOLEAN,
+                approval_status_team_updated_at DATETIME,
+                approval_status_project_updated_at DATETIME,
+                created_at DATETIME,
+                updated_at DATETIME
+            )
+            '
+        );
+
+        $this->addSql(
+            '
             CREATE TABLE annual_vacation (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT REFERENCES user(id),

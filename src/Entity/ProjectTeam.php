@@ -31,9 +31,9 @@ class ProjectTeam
         return $this->project;
     }
 
-    public function setProject(?Project $project_id): static
+    public function setProject(?Project $project): static
     {
-        $this->project = $project_id;
+        $this->project = $project;
 
         return $this;
     }

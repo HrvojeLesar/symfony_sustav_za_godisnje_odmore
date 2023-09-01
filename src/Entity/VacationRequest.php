@@ -18,74 +18,74 @@ class VacationRequest
     #[ORM\JoinColumn(name: 'user_id', nullable: false)]
     private User $user;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $from_date = null;
+    #[ORM\Column(name: 'from_date ', type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $fromDate = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $to_date = null;
+    #[ORM\Column(name: 'to_date ', type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $toDate = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $created_at = null;
+    #[ORM\Column(name: 'created_at ', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $updated_at = null;
+    #[ORM\Column(name: 'updated_at ', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUserId(?User $user_id): static
+    public function setUser(?User $user): static
     {
-        $this->user = $user_id;
+        $this->user = $user;
 
         return $this;
     }
 
     public function getFromDate(): ?\DateTimeInterface
     {
-        return $this->from_date;
+        return $this->fromDate;
     }
 
-    public function setFromDate(\DateTimeInterface $from_date): static
+    public function setFromDate(\DateTimeInterface $fromDate): static
     {
-        $this->from_date = $from_date;
+        $this->fromDate = $fromDate;
 
         return $this;
     }
 
     public function getToDate(): ?\DateTimeInterface
     {
-        return $this->to_date;
+        return $this->toDate;
     }
 
-    public function setToDate(\DateTimeInterface $to_date): static
+    public function setToDate(\DateTimeInterface $toDate): static
     {
-        $this->to_date = $to_date;
+        $this->toDate = $toDate;
 
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    protected function setCreatedAt(?\DateTimeInterface $created_at): static
+    protected function setCreatedAt(?\DateTimeInterface $createdAt): static
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    protected function setUpdatedAt(?\DateTimeInterface $updated_at): static
+    protected function setUpdatedAt(?\DateTimeInterface $updatedAt): static
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

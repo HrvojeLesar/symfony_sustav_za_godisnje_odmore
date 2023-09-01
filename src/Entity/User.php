@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\PostPersist;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class User
 {
     #[ORM\Id]
@@ -44,9 +47,9 @@ class User
         return $this->firstName;
     }
 
-    public function setFirstName(string $first_name): static
+    public function setFirstName(string $firstName): static
     {
-        $this->firstName = $first_name;
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -56,9 +59,9 @@ class User
         return $this->lastName;
     }
 
-    public function setLastName(string $last_name): static
+    public function setLastName(string $lastName): static
     {
-        $this->lastName = $last_name;
+        $this->lastName = $lastName;
 
         return $this;
     }
@@ -80,9 +83,9 @@ class User
         return $this->isAdmin;
     }
 
-    public function setIsAdmin(bool $is_admin): static
+    public function setIsAdmin(bool $isAdmin): static
     {
-        $this->isAdmin = $is_admin;
+        $this->isAdmin = $isAdmin;
 
         return $this;
     }
@@ -97,5 +100,16 @@ class User
         $this->workplace = $workplace;
 
         return $this;
+    }
+
+    #[PostPersist]
+    public function postPersist(PostPersistEventArgs $args): void
+    {
+        $entityManager = $args->getObjectManager();
+        $annualVacation = new AnnualVacation();
+        $annualVacation->setUser($this);
+        $annualVacation->setYear(date("Y"));
+        $entityManager->persist($annualVacation);
+        $entityManager->flush();
     }
 }
