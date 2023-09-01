@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AnnualVacationRepository;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreFlush;
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping\PrePersist;
 #[ORM\HasLifecycleCallbacks]
 class AnnualVacation
 {
+    private const MAXIMUMVACATIONDAYS = 20;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -25,17 +28,17 @@ class AnnualVacation
     #[ORM\Column(length: 4)]
     private ?string $year = null;
 
-    #[ORM\Column]
-    private ?int $maximum_vacation_days = null;
+    #[ORM\Column(name: 'maximum_vacation_days')]
+    private int $maximumVacationDays = self::MAXIMUMVACATIONDAYS;
 
-    #[ORM\Column]
-    private ?int $vacation_days_taken = null;
+    #[ORM\Column(name: 'vacation_days_taken ')]
+    private ?int $vacationDaysTaken = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $created_at = null;
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $updated_at = null;
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
 
     public function getId(): ?int
     {
@@ -68,48 +71,48 @@ class AnnualVacation
 
     public function getMaximumVacationDays(): ?int
     {
-        return $this->maximum_vacation_days;
+        return $this->maximumVacationDays;
     }
 
-    public function setMaximumVacationDays(int $maximum_vacation_days): static
+    public function setMaximumVacationDays(int $maximumVacationDays): static
     {
-        $this->maximum_vacation_days = $maximum_vacation_days;
+        $this->maximumVacationDays = $maximumVacationDays;
 
         return $this;
     }
 
     public function getVacationDaysTaken(): ?string
     {
-        return $this->vacation_days_taken;
+        return $this->vacationDaysTaken;
     }
 
-    public function setVacationDaysTaken(string $vacation_days_taken): static
+    public function setVacationDaysTaken(string $vacationDaysTaken): static
     {
-        $this->vacation_days_taken = $vacation_days_taken;
+        $this->vacationDaysTaken = $vacationDaysTaken;
 
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    protected function setCreatedAt(?\DateTimeInterface $created_at): static
+    protected function setCreatedAt(?\DateTimeInterface $createdAt): static
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    protected function setUpdatedAt(?\DateTimeInterface $updated_at): static
+    protected function setUpdatedAt(?\DateTimeInterface $updatedAt): static
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -117,6 +120,7 @@ class AnnualVacation
     #[PrePersist]
     public function onCreate(): void
     {
+        $this->setVacationDaysTaken(0);
         $this->setCreatedAt(new DateTime("now"));
     }
 

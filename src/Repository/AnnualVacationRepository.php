@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\AnnualVacation;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,28 +22,21 @@ class AnnualVacationRepository extends ServiceEntityRepository
         parent::__construct($registry, AnnualVacation::class);
     }
 
-//    /**
-//     * @return AnnualVacation[] Returns an array of AnnualVacation objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function generateNewYearlyRecords(): void
+    {
+        $entityManager = $this->getEntityManager();
+        /** @var UserRepository $userRepo */
+        $userRepo = $entityManager->getRepository(User::class);
+        $userRepo->findAll();
+        $users = $userRepo->getAllUsersWithNoAnnualVacationRecord();
+        $year = date("Y");
+        foreach ($users as &$user) {
+            $annualVacation = new AnnualVacation();
+            $annualVacation->setUser($user);
+            $annualVacation->setYear($year);
+            $entityManager->persist($annualVacation);
+        }
 
-//    public function findOneBySomeField($value): ?AnnualVacation
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $entityManager->flush();
+    }
 }
