@@ -2,12 +2,14 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\AnnualVacation;
 use App\Entity\Project;
 use App\Entity\ProjectTeam;
 use App\Entity\Role;
 use App\Entity\Team;
 use App\Entity\TeamMember;
 use App\Entity\User;
+use App\Entity\VacationRequest;
 use App\Entity\Workplace;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -61,7 +63,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('User', 'fas fa-home', User::class);
         yield MenuItem::linkToCrud('Workplace', 'fas fa-home', Workplace::class);
 
-        // yield MenuItem::linkToCrud('VacationRequest', 'fas fa-home', VacationRequest::class);
-        // yield MenuItem::linkToCrud('AnnualVacation', 'fas fa-home', AnnualVacation::class);
+        yield MenuItem::linkToCrud('AnnualVacation', 'fas fa-home', AnnualVacation::class);
+        yield MenuItem::linkToCrud('VacationRequest', 'fas fa-home', VacationRequest::class);
     }
 }

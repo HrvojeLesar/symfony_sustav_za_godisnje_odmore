@@ -103,9 +103,9 @@ class User
     }
 
     #[PostPersist]
-    public function postPersist(PostPersistEventArgs $args): void
+    public function postPersist(PostPersistEventArgs $event): void
     {
-        $entityManager = $args->getObjectManager();
+        $entityManager = $event->getObjectManager();
         $annualVacation = new AnnualVacation();
         $annualVacation->setUser($this);
         $annualVacation->setYear(date("Y"));
