@@ -3,63 +3,70 @@
 {% block title %}Hello EmployeeController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper {
-        margin: 1em auto;
-        max-width: 800px;
-        width: 95%;
-        font: 18px/1.5 sans-serif;
-    }
-
-    .example-wrapper code {
-        background: #F5F5F5;
-        padding: 2px 6px;
-    }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a
-                    href="{{ '/home/hrvoje/dev/praksa/godisnji_odmor/src/Controller/EmployeeController.php'|file_link(0) }}">src/Controller/EmployeeController.php</a></code>
-        </li>
-        <li>Your template at <code><a
-                    href="{{ '/home/hrvoje/dev/praksa/godisnji_odmor/templates/employee/index.html.twig'|file_link(0) }}">templates/employee/index.html.twig</a></code>
-        </li>
-    </ul>
+{% if user %}
+<div class="d-flex flex-column container">
+    <div class="d-flex flex-column border align-self-start justify-content-start my-2 p-2">
+        <div>
+            <b>Ime: </b><span>{{ user.firstName }}</span>
+        </div>
+        <div>
+            <b>Prezime: </b><span>{{ user.lastName }}</span>
+        </div>
+        <div>
+            <b>Email: </b><span>{{ user.email }}</span>
+        </div>
+        {% if user.workplace %}
+        <div>
+            <b>Radno mjesto: </b><span>{{ user.workplace }}</span>
+        </div>
+        {% endif %}
+        <div>
+            <b>Preostalo dana godišnjega: </b><span>{{ user.getAvailableVacationDays }}</span>
+        </div>
+    </div>
+    {% endif %}
+    <div class="border p-2">
+        <h2>Pregled zahtjeva</h2>
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Od-Do</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in vacation_requests %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ request.getFromDate|date('d.m.Y') }} - {{ request.getToDate|date('d.m.Y') }} ({{
+                        request.daysRequested }})</td>
+                    <td>{{ request.getStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                ...
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#">TODO: Detalji</a></li>
+                                <li><a class="dropdown-item" href="#">TODO: Uredivanje</a></li>
+                                {% if request.isRemovable %}
+                                <li><a class="dropdown-item"
+                                        href="{{ path('app_vacation_request_remove', { id: request.getId }) }}">Brisanje</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-primary" href="{{ path('app_vacation_request') }}">Novi zahtjev</a>
+        </div>
+    </div>
 </div>
-<table class="table align-middle">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Od-Do</th>
-            <th scope="col">Status</th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for request in vacation_requests %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ request.getToDate|date('d-m-Y') }}</td>
-            <td>{{ request.getStatus }}</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        ...
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="#">TODO: Detalji</a></li>
-                        <li><a class="dropdown-item" href="#">TODO: Brisanje</a></li>
-                    </ul>
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<a class="btn btn-primary" href="{{ path('app_vacation_request') }}">Novi zahtjev</a>
 {% endblock %}

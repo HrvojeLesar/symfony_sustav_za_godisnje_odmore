@@ -6,9 +6,12 @@ use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\PostPersist;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Project
 {
     #[ORM\Id]
@@ -17,7 +20,7 @@ class Project
     private ?int $id = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(name: 'project_lead', nullable: false)]
+    #[ORM\JoinColumn(name: 'project_lead_id', nullable: false)]
     private ?User $projectLead = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -26,7 +29,7 @@ class Project
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'project_id', targetEntity: ProjectTeam::class)]
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: ProjectTeam::class)]
     private Collection $projectTeams;
 
     public function __construct()
@@ -108,5 +111,38 @@ class Project
         }
 
         return $this;
+    }
+
+    #[PostPersist]
+    public function postPersist(PostPersistEventArgs $event): void
+    {
+        $entityManager = $event->getObjectManager();
+        $projectLead = $this->getProjectLead();
+        $projectLead->appendRole(Role::ProjectLead);
+        $entityManager->persist($projectLead);
+        $entityManager->flush();
+    }
+
+    /**
+     * @return VacationRequest[]
+     */
+    public function getVacationRequests(): array
+    {
+        return $this->getProjectTeams()->reduce(function (array $accumulator, ProjectTeam $projectTeam) {
+            $pendingVacationRequests = $projectTeam->getTeam()->getVacationRequests();
+            if (count($pendingVacationRequests) > 0) {
+                return array_merge($accumulator, $pendingVacationRequests);
+            } else {
+                return $accumulator;
+            }
+        }, []);
+    }
+
+    /**
+     * @return VacationRequest[]
+     */
+    public function getPendingProjectVacationRequests(): array
+    {
+        return array_filter($this->getVacationRequests(), function (VacationRequest $vacationRequest) { return $vacationRequest->isPendingProjectLeadApproval(); });
     }
 }

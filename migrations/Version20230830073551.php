@@ -32,10 +32,11 @@ final class Version20230830073551 extends AbstractMigration
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 first_name TEXT NOT NULL,
                 last_name TEXT NOT NULL,
-                email TEXT NOT NULL,
+                email VARCHAR(255) NOT NULL,
                 workplace_id INT REFERENCES workplace(id),
                 password TEXT NOT NULL,
-                roles JSON
+                roles JSON,
+                UNIQUE (email(255))
             )
             '
         );
@@ -79,7 +80,7 @@ final class Version20230830073551 extends AbstractMigration
             '
             CREATE TABLE project (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                project_lead INT NOT NULL REFERENCES user(id),
+                project_lead_id INT NOT NULL REFERENCES user(id),
                 name TEXT NOT NULL,
                 description TEXT
             )
@@ -90,6 +91,7 @@ final class Version20230830073551 extends AbstractMigration
             '
             CREATE TABLE team (
                 id INT AUTO_INCREMENT PRIMARY KEY,
+                team_lead_id INT NOT NULL REFERENCES user(id),
                 name TEXT NOT NULL,
                 description TEXT
             )

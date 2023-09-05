@@ -256,4 +256,24 @@ class VacationRequest
 
         return $this;
     }
+
+    public function isRemovable(): bool
+    {
+        return is_null($this->isApprovedByTeamLead) && is_null($this->isApprovedByProjectLead);
+    }
+
+    public function isPendingTeamLeadApproval(): bool
+    {
+        return is_null($this->isApprovedByTeamLead) && (is_null($this->isApprovedByProjectLead) || $this->isApprovedByProjectLead === true);
+    }
+
+    public function isPendingProjectLeadApproval(): bool
+    {
+        return is_null($this->isApprovedByProjectLead) && (is_null($this->isApprovedByTeamLead) || $this->isApprovedByTeamLead === true);
+    }
+
+    public function isPendingApproval(): bool
+    {
+        return $this->isPendingTeamLeadApproval() && $this->isPendingProjectLeadApproval();
+    }
 }

@@ -24,7 +24,6 @@ class AnnualVacationCrudController extends AbstractCrudController
             AssociationField::new('user'),
             TextField::new('year'),
             NumberField::new('maximumVacationDays'),
-            NumberField::new('vacationDaysTaken'),
             DateField::new('createdAt')->hideOnForm(),
             DateField::new('updatedAt')->hideOnForm(),
         ];

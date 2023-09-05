@@ -7,7 +7,6 @@ use App\Entity\User;
 use App\Entity\VacationRequest;
 use App\Repository\AnnualVacationRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -58,16 +57,6 @@ class VacationRequestValidator extends ConstraintValidator
         /** @var User $user */
         $user = $this->security->getUser();
 
-        /** @var AnnualVacation|null $annualVacation  =*/
-        $annualVacation = $user->getAnnualVacations()
-            ->filter(function (AnnualVacation $av) {
-                return $av->getYear() === date('Y');
-            })
-            ->first();
-
-        if (is_null($annualVacation)) {
-            throw new Exception("Annual vacation not found");
-        }
-        return $annualVacation->availableVacationDays();
+        return $user->getAvailableVacationDays();
     }
 }

@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="m-auto">
-    <form class="p-3" action="{{ path('app_login') }}" method="post" style="max-width: 300px; border: dashed 1px;">
+<div class="d-flex justify-content-center container mt-5">
+    <form class="p-3 border" action="{{ path('app_login') }}" method="post" style="max-width: 300px;">
         <h1 class="h3 mb-3 fw-normal">Prijava</h1>
         <div class="form-floating mb-2">
             <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="_username"

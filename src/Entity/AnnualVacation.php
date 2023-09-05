@@ -113,13 +113,13 @@ class AnnualVacation
     }
 
     #[PrePersist]
-    public function onCreate(): void
+    public function prePersist(): void
     {
         $this->setCreatedAt(new DateTime("now"));
     }
 
     #[PreUpdate]
-    public function onUpdate(): void
+    public function preUpdate(): void
     {
         $this->setUpdatedAt(new DateTime("now"));
     }

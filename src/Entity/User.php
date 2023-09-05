@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PostPersist;
+use Exception;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -51,7 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->vacationRequests = new ArrayCollection();
-        // $this->annualVacations = new ArrayCollection();
+        $this->annualVacations = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -141,6 +142,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function appendRole(string $role): static
+    {
+        $this->roles[] = $role;
+        $this->roles = array_unique($this->roles);
+        return $this;
+    }
+
     public function eraseCredentials(): void
     {
     }
@@ -220,5 +228,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getLatestAnnualVacation(): AnnualVacation
+    {
+        $annualVacation = $this->getAnnualVacations()
+        ->filter(function (AnnualVacation $av) {
+            return $av->getYear() === date('Y');
+        })
+        ->first();
+
+        if (is_null($annualVacation)) {
+            throw new Exception("Annual vacation not found");
+        }
+
+        return $annualVacation;
+    }
+
+    public function getAvailableVacationDays(): int
+    {
+
+        return $this->getLatestAnnualVacation()->availableVacationDays();
+    }
+
+    public function isProjectLead(): bool
+    {
+        return in_array(Role::ProjectLead, $this->getRoles());
+    }
+
+    public function isTeamLead(): bool
+    {
+        return in_array(Role::TeamLead, $this->getRoles());
     }
 }

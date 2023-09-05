@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
-    #[Route('/registration', name: 'app_registration')]
+    #[Route('/register', name: 'app_registration')]
     public function index(UserPasswordHasherInterface $passwordHasher, Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
@@ -30,7 +30,6 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
         return $this->render('registration/index.html.twig', [
-            'controller_name' => 'RegistrationController',
             'form' => $form,
         ]);
     }

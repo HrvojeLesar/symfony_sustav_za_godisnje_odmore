@@ -5,10 +5,14 @@ namespace App\Entity;
 use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ReadableCollection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\PostPersist;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Team
 {
     #[ORM\Id]
@@ -22,8 +26,12 @@ class Team
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'teamId', targetEntity: TeamMember::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'team', targetEntity: TeamMember::class, orphanRemoval: true)]
     private Collection $teamMembers;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(name: 'team_lead_id', nullable: false)]
+    private ?User $teamLead = null;
 
     public function __construct()
     {
@@ -92,5 +100,60 @@ class Team
         }
 
         return $this;
+    }
+
+    public function getTeamLead(): ?User
+    {
+        return $this->teamLead;
+    }
+
+    public function setTeamLead(?User $teamLead): static
+    {
+        $this->teamLead = $teamLead;
+
+        return $this;
+    }
+
+    #[PostPersist]
+    public function postPersist(PostPersistEventArgs $event): void
+    {
+        $entityManager = $event->getObjectManager();
+        $teamLead = $this->getTeamLead();
+        $teamLead->appendRole(Role::TeamLead);
+        $entityManager->persist($teamLead);
+
+        $teamMember = new TeamMember();
+        $teamMember->setMember($teamLead);
+        $teamMember->setTeam($this);
+        $entityManager->persist($teamMember);
+
+        $entityManager->flush();
+    }
+
+    /**
+     * @return VacationRequest[]
+     */
+    public function getVacationRequests(): array
+    {
+        /** @var ReadableCollection<User> $teamMembers */
+        return $this->getTeamMembers()->map(function (TeamMember $teamMember) { return $teamMember->getMember(); })
+            ->reduce(function (array $accumulator, User $user) {
+                /** @var ReadableCollection<VacationRequest> $pendingVacationRequests */
+                $pendingVacationRequests = $user
+                    ->getVacationRequests();
+                if ($pendingVacationRequests->count() > 0) {
+                    return array_merge($accumulator, $pendingVacationRequests->toArray());
+                } else {
+                    return $accumulator;
+                }
+            }, []);
+    }
+
+    /**
+     * @return VacationRequest[]
+     */
+    public function getPendingTeamVacationRequests(): array
+    {
+        return array_filter($this->getVacationRequests(), function (VacationRequest $vacationRequest) { return $vacationRequest->isPendingTeamLeadApproval(); });
     }
 }
