@@ -5,7 +5,6 @@ namespace App\Controller\Admin;
 use App\Entity\AnnualVacation;
 use App\Entity\Project;
 use App\Entity\ProjectTeam;
-use App\Entity\Role;
 use App\Entity\Team;
 use App\Entity\TeamMember;
 use App\Entity\User;
@@ -57,7 +56,6 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToCrud('Project', 'fas fa-home', Project::class);
         yield MenuItem::linkToCrud('ProjectTeam', 'fas fa-home', ProjectTeam::class);
-        yield MenuItem::linkToCrud('Roles', 'fas fa-home', Role::class);
         yield MenuItem::linkToCrud('Team', 'fas fa-home', Team::class);
         yield MenuItem::linkToCrud('TeamMember', 'fas fa-home', TeamMember::class);
         yield MenuItem::linkToCrud('User', 'fas fa-home', User::class);

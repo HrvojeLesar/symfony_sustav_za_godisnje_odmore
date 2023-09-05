@@ -2,50 +2,23 @@
 
 namespace App\Entity;
 
-use App\Repository\RoleRepository;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity(repositoryClass: RoleRepository::class)]
-class Role
+abstract class Role
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    public const User = 'ROLE_USER';
+    public const ProjectLead = 'ROLE_PROJECT_LEAD';
+    public const TeamLead = 'ROLE_TEAM_LEAD';
+    public const Admin = 'ROLE_ADMIN';
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $name = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
-
-    public function getId(): ?int
+    /**
+     * @return Role[]
+     */
+    public static function roleChoices(): array
     {
-        return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
+        return [
+            'User' => Role::User,
+            'Project Lead' => Role::ProjectLead,
+            'Team Lead' => Role::TeamLead,
+            'Admin' => Role::Admin,
+        ];
     }
 }

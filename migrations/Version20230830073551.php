@@ -18,30 +18,6 @@ final class Version20230830073551 extends AbstractMigration
     {
         $this->addSql(
             '
-            CREATE TABLE role (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                description TEXT
-            )'
-        );
-        $this->addSql(
-            '
-            INSERT INTO role(id, name)
-            VALUES
-                (1, "ProjectLead"),
-                (2, "TeamLead"),
-                (3, "Member")
-            '
-        );
-        $this->addSql(
-            '
-            CREATE INDEX role_name_index
-            ON role(name)
-            '
-        );
-
-        $this->addSql(
-            '
             CREATE TABLE workplace (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name TEXT NOT NULL,
@@ -58,7 +34,8 @@ final class Version20230830073551 extends AbstractMigration
                 last_name TEXT NOT NULL,
                 email TEXT NOT NULL,
                 workplace_id INT REFERENCES workplace(id),
-                is_admin BOOLEAN NOT NULL
+                password TEXT NOT NULL,
+                roles JSON
             )
             '
         );
@@ -68,8 +45,10 @@ final class Version20230830073551 extends AbstractMigration
             CREATE TABLE vacation_request (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT NOT NULL REFERENCES user(id),
+                annual_vacation_id INT NOT NULL REFERENCES annual_vacation(id),
                 from_date DATE NOT NULL,
                 to_date DATE NOT NULL,
+                days_requested INT NOT NULL,
                 approved_by_team_lead_id INT REFERENCES user(id),
                 approved_by_project_lead_id INT REFERENCES user(id),
                 is_approved_by_team_lead BOOLEAN,
@@ -89,7 +68,6 @@ final class Version20230830073551 extends AbstractMigration
                 user_id INT REFERENCES user(id),
                 year YEAR,
                 maximum_vacation_days INT NOT NULL,
-                vacation_days_taken INT NOT NULL,
                 created_at DATETIME,
                 updated_at DATETIME,
                 UNIQUE (user_id, year)
@@ -151,6 +129,5 @@ final class Version20230830073551 extends AbstractMigration
         $this->addSql('DROP TABLE IF EXISTS vacation_request');
         $this->addSql('DROP TABLE IF EXISTS user');
         $this->addSql('DROP TABLE IF EXISTS workplace');
-        $this->addSql('DROP TABLE IF EXISTS role');
     }
 }

@@ -7,12 +7,13 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\PreFlush;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
+use App\Validator\VacationRequest as VacationRequestValidator;
 
 #[ORM\Entity(repositoryClass: VacationRequestRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[VacationRequestValidator]
 class VacationRequest
 {
     #[ORM\Id]
@@ -21,8 +22,8 @@ class VacationRequest
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'vacationRequests')]
-    #[ORM\JoinColumn(name: 'user_id', nullable: false)]
-    private User $user;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     #[ORM\Column(name: 'from_date', type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $fromDate = null;
@@ -53,6 +54,13 @@ class VacationRequest
 
     #[ORM\Column(name: 'approval_status_project_updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $approvalStatusProjectUpdatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'vacationRequests')]
+    #[ORM\JoinColumn(name: 'annual_vacation_id', nullable: false)]
+    private ?AnnualVacation $annualVacation = null;
+
+    #[ORM\Column]
+    private ?int $daysRequested = null;
 
     public function getId(): ?int
     {
@@ -143,7 +151,7 @@ class VacationRequest
         return $this;
     }
 
-    public function isIsApprovedByTeamLead(): ?bool
+    public function getIsApprovedByTeamLead(): ?bool
     {
         return $this->isApprovedByTeamLead;
     }
@@ -155,7 +163,7 @@ class VacationRequest
         return $this;
     }
 
-    public function isIsApprovedByProjectLead(): ?bool
+    public function getIsApprovedByProjectLead(): ?bool
     {
         return $this->isApprovedByProjectLead;
     }
@@ -195,22 +203,57 @@ class VacationRequest
     public function prePersist(): void
     {
         $this->setCreatedAt(new DateTime("now"));
-    }
-
-    #[PreFlush]
-    public function preFlush(): void
-    {
-        $this->setUpdatedAt(new DateTime("now"));
+        $this->setDaysRequested(
+            intval(
+                $this->getFromDate()->diff($this->getToDate())->format('%a')
+            )
+        );
     }
 
     #[PreUpdate]
     public function preUpdate(PreUpdateEventArgs $event): void
     {
+        $this->setUpdatedAt(new DateTime("now"));
         if ($event->hasChangedField('approvedByTeamLead') || $event->hasChangedField('isApprovedByTeamLead')) {
             $this->setApprovalStatusTeamUpdatedAt(new DateTime("now"));
         }
         if ($event->hasChangedField('approvedByProjectLead') || $event->hasChangedField('isApprovedByProjectLead')) {
             $this->setApprovalStatusProjectUpdatedAt(new DateTime("now"));
         }
+    }
+
+    public function getStatus(): string
+    {
+        return match (true) {
+            $this->isApprovedByTeamLead === false || $this->isApprovedByProjectLead === false => VacationRequestStatus::Rejected,
+            $this->isApprovedByTeamLead === true && $this->isApprovedByProjectLead === true => VacationRequestStatus::Approved,
+            is_null($this->isApprovedByTeamLead) && $this->isApprovedByProjectLead === true => VacationRequestStatus::PendingTeamLead,
+            $this->isApprovedByTeamLead === true && is_null($this->isApprovedByProjectLead) => VacationRequestStatus::PendingProjectLead,
+            is_null($this->isApprovedByTeamLead) && is_null($this->isApprovedByProjectLead) => VacationRequestStatus::Pending,
+        };
+    }
+
+    public function getAnnualVacation(): ?AnnualVacation
+    {
+        return $this->annualVacation;
+    }
+
+    public function setAnnualVacation(?AnnualVacation $annualVacation): static
+    {
+        $this->annualVacation = $annualVacation;
+
+        return $this;
+    }
+
+    public function getDaysRequested(): ?int
+    {
+        return $this->daysRequested;
+    }
+
+    public function setDaysRequested(int $daysRequested): static
+    {
+        $this->daysRequested = $daysRequested;
+
+        return $this;
     }
 }

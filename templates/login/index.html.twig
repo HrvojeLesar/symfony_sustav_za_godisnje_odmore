@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="m-auto">
+    <form class="p-3" action="{{ path('app_login') }}" method="post" style="max-width: 300px; border: dashed 1px;">
+        <h1 class="h3 mb-3 fw-normal">Prijava</h1>
+        <div class="form-floating mb-2">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="_username"
+                value="{{ last_username }}">
+            <label for="floatingInput">Email</label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="_password">
+            <label for="floatingPassword">Lozinka</label>
+        </div>
+
+        {% if error %}
+        <div class="mb-2" style="color: red;">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        {# If you want to control the URL the user is redirected to on success
+        <input type="hidden" name="_target_path" value="/account"> #}
+
+        <button class="btn btn-primary w-100" type="submit">Prijava</button>
+    </form>
+</div>
+{% endblock %}
