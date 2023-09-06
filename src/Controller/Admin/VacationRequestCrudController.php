@@ -24,6 +24,7 @@ class VacationRequestCrudController extends AbstractCrudController
             AssociationField::new('user'),
             DateField::new('fromDate'),
             DateField::new('toDate'),
+            AssociationField::new('annualVacation'),
             AssociationField::new('approvedByTeamLead'),
             AssociationField::new('approvedByProjectLead'),
             BooleanField::new('isApprovedByTeamLead')->hideOnForm(),

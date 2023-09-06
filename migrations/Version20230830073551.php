@@ -50,6 +50,7 @@ final class Version20230830073551 extends AbstractMigration
                 from_date DATE NOT NULL,
                 to_date DATE NOT NULL,
                 days_requested INT NOT NULL,
+                description TEXT,
                 approved_by_team_lead_id INT REFERENCES user(id),
                 approved_by_project_lead_id INT REFERENCES user(id),
                 is_approved_by_team_lead BOOLEAN,

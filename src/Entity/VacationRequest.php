@@ -62,6 +62,9 @@ class VacationRequest
     #[ORM\Column]
     private ?int $daysRequested = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -275,5 +278,17 @@ class VacationRequest
     public function isPendingApproval(): bool
     {
         return $this->isPendingTeamLeadApproval() && $this->isPendingProjectLeadApproval();
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

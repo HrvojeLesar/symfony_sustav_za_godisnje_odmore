@@ -47,6 +47,7 @@ class VacationRequestController extends AbstractController
 
         return $this->render('vacation_request/index.html.twig', [
             'form' => $form,
+            'user' => $this->getUser()
         ]);
     }
 
@@ -61,6 +62,12 @@ class VacationRequestController extends AbstractController
 
         if (! $vacationRequest->isRemovable()) {
             throw new Exception("Selected VacationRequest is not removable");
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+        if ($vacationRequest->getUser()->getId() !== $user->getId()) {
+            throw new Exception('User has no permissions for this action.');
         }
 
         $entityManager->remove($vacationRequest);

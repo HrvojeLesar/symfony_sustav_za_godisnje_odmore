@@ -47,8 +47,10 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Zaposlenik</th>
                     <th scope="col">Od-Do</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Opis</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -56,9 +58,11 @@
                 {% for request in vacation_requests_team %}
                 <tr>
                     <td>{{ loop.index }}</td>
+                    <td>{{ request.getUser().firstName }} {{ request.getUser().lastName }}</td>
                     <td>{{ request.getFromDate|date('d.m.Y') }} - {{ request.getToDate|date('d.m.Y') }} ({{
                         request.daysRequested }})</td>
                     <td>{{ request.getStatus }}</td>
+                    <td>{{ request.getDescription }}</td>
                     <td>
                         <div class="dropdown">
                             <button class="btn btn-secondary" type="button" id="dropdownMenuButton1"
@@ -88,8 +92,10 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Zaposlenik</th>
                     <th scope="col">Od-Do</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Opis</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -97,9 +103,11 @@
                 {% for request in vacation_requests_project %}
                 <tr>
                     <td>{{ loop.index }}</td>
+                    <td>{{ request.getUser().firstName }} {{ request.getUser().lastName }}</td>
                     <td>{{ request.getFromDate|date('d.m.Y') }} - {{ request.getToDate|date('d.m.Y') }} ({{
                         request.daysRequested }})</td>
                     <td>{{ request.getStatus }}</td>
+                    <td>{{ request.getDescription }}</td>
                     <td>
                         <div class="dropdown">
                             <button class="btn btn-secondary" type="button" id="dropdownMenuButton1"

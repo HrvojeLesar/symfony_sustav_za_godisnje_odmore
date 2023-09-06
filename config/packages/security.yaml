@@ -34,14 +34,30 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
-    # - { path: ^/login, roles: PUBLIC_ACCESS }
-    # - { path: ^/register, roles: PUBLIC_ACCESS }
-    # - { path: ^/, roles: ROLE_USER }
-    # - {
-    #     path: ^/admin,
-    #     roles: [ IS_AUTHENTICATED_FULLY, ROLE_ADMIN, PUBLIC_ACCESS ]
-    #   }
-    # - { path: ^/, roles: ROLE_USER }
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/register, roles: PUBLIC_ACCESS }
+    - { path: ^/admin, roles: PUBLIC_ACCESS }
+    - {
+        path: ^/employee/check-vacation-requests,
+        roles: [ ROLE_TEAM_LEAD, ROLE_PROJECT_LEAD ]
+      }
+    - { path: ^/employee, roles: ROLE_USER }
+    - { path: ^/vacation/request, roles: ROLE_USER }
+    - { path: ^/vacation/remove, roles: ROLE_USER }
+    - {
+        path: ^/vacation/project-lead-grant,
+        roles: ROLE_PROJECT_LEAD
+      }
+    - {
+        path: ^/vacation/project-lead-reject,
+        roles: ROLE_PROJECT_LEAD
+      }
+    - { path: ^/vacation/team-lead-grant, roles: ROLE_TEAM_LEAD }
+    - {
+        path: ^/vacation/team-lead-reject,
+        roles: ROLE_TEAM_LEAD
+      }
+    - { path: ^/, roles: ROLE_USER }
 
 when@test:
   security:

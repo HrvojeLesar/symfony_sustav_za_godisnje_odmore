@@ -5,24 +5,31 @@
 {% block body %}
 {% if user %}
 <div class="d-flex flex-column container">
-    <div class="d-flex flex-column border align-self-start justify-content-start my-2 p-2">
-        <div>
-            <b>Ime: </b><span>{{ user.firstName }}</span>
+    <div class="d-flex justify-content-between">
+        <div class="d-flex flex-column border align-self-start justify-content-start my-2 p-2">
+            <div>
+                <b>Ime: </b><span>{{ user.firstName }}</span>
+            </div>
+            <div>
+                <b>Prezime: </b><span>{{ user.lastName }}</span>
+            </div>
+            <div>
+                <b>Email: </b><span>{{ user.email }}</span>
+            </div>
+            {% if user.workplace %}
+            <div>
+                <b>Radno mjesto: </b><span>{{ user.workplace }}</span>
+            </div>
+            {% endif %}
+            <div>
+                <b>Preostalo dana godišnjega: </b><span>{{ user.getAvailableVacationDays }}</span>
+            </div>
         </div>
-        <div>
-            <b>Prezime: </b><span>{{ user.lastName }}</span>
-        </div>
-        <div>
-            <b>Email: </b><span>{{ user.email }}</span>
-        </div>
-        {% if user.workplace %}
-        <div>
-            <b>Radno mjesto: </b><span>{{ user.workplace }}</span>
+        {% if user.isTeamLead or user.isProjectLead %}
+        <div class="d-flex flex-column justify-content-end my-2">
+            <a class="btn btn-primary" href="{{ path('app_employee_check_vacation_requests') }}">Pregled zahtjeva</a>
         </div>
         {% endif %}
-        <div>
-            <b>Preostalo dana godišnjega: </b><span>{{ user.getAvailableVacationDays }}</span>
-        </div>
     </div>
     {% endif %}
     <div class="border p-2">
@@ -33,6 +40,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Od-Do</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Opis</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -43,6 +51,7 @@
                     <td>{{ request.getFromDate|date('d.m.Y') }} - {{ request.getToDate|date('d.m.Y') }} ({{
                         request.daysRequested }})</td>
                     <td>{{ request.getStatus }}</td>
+                    <td>{{ request.getDescription }}</td>
                     <td>
                         <div class="dropdown">
                             <button class="btn btn-secondary" type="button" id="dropdownMenuButton1"
@@ -50,8 +59,6 @@
                                 ...
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#">TODO: Detalji</a></li>
-                                <li><a class="dropdown-item" href="#">TODO: Uredivanje</a></li>
                                 {% if request.isRemovable %}
                                 <li><a class="dropdown-item"
                                         href="{{ path('app_vacation_request_remove', { id: request.getId }) }}">Brisanje</a>
