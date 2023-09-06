@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello EmployeeController!{% endblock %}
+
+{% block body %}
+{% if user %}
+<div class="d-flex flex-column container">
+    <div class="d-flex flex-column border align-self-start justify-content-start my-2 p-2">
+        <div>
+            <b>Ime: </b><span>{{ user.firstName }}</span>
+        </div>
+        <div>
+            <b>Prezime: </b><span>{{ user.lastName }}</span>
+        </div>
+        <div>
+            <b>Email: </b><span>{{ user.email }}</span>
+        </div>
+        {% if user.workplace %}
+        <div>
+            <b>Radno mjesto: </b><span>{{ user.workplace }}</span>
+        </div>
+        {% endif %}
+        {% if user.isTeamLead %}
+        <div>
+            <b>Voditelj tima: </b>
+            {% for team in leader_of_teams %}
+            {% if loop.index0 == 0 %}
+            <span>{{ team.getName }}</span>
+            {% else %}
+            <span>| {{ team.getName }}</span>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if user.isProjectLead %}
+        <div>
+            <b>Voditelj projekta: </b><span>{{ user.firstName }}</span>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if user.isTeamLead %}
+    <div class="border p-2">
+        <h2>Pregled zahtjeva (tim)</h2>
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Od-Do</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in vacation_requests_team %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ request.getFromDate|date('d.m.Y') }} - {{ request.getToDate|date('d.m.Y') }} ({{
+                        request.daysRequested }})</td>
+                    <td>{{ request.getStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                ...
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item"
+                                        href="{{ path('app_vacation_request_team_lead_grant', { id: request.getId }) }}">Odobri</a>
+                                </li>
+                                <li><a class="dropdown-item"
+                                        href="{{ path('app_vacation_request_team_lead_reject', { id: request.getId }) }}">Odbij</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    {% if user.isProjectLead %}
+    <div class="border p-2">
+        <h2>Pregled zahtjeva (projekt)</h2>
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Od-Do</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in vacation_requests_project %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ request.getFromDate|date('d.m.Y') }} - {{ request.getToDate|date('d.m.Y') }} ({{
+                        request.daysRequested }})</td>
+                    <td>{{ request.getStatus }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                ...
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item"
+                                        href="{{ path('app_vacation_request_project_lead_grant', { id: request.getId }) }}">Odobri</a>
+                                </li>
+                                <li><a class="dropdown-item"
+                                        href="{{ path('app_vacation_request_project_lead_reject', { id: request.getId }) }}">Odbij</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

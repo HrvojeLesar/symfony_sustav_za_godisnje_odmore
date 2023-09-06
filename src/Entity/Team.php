@@ -26,16 +26,24 @@ class Team
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'team', targetEntity: TeamMember::class, orphanRemoval: true)]
+    #[ORM\JoinTable(name: 'team_member')]
+    #[ORM\InverseJoinColumn(name: 'member_id')]
+    #[ORM\ManyToMany(targetEntity: User::class)]
     private Collection $teamMembers;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'team_lead_id', nullable: false)]
     private ?User $teamLead = null;
 
+    #[ORM\JoinTable(name: 'project_team')]
+    #[ORM\InverseJoinColumn(name: 'project_id')]
+    #[ORM\ManyToMany(targetEntity: Project::class)]
+    private Collection $projects;
+
     public function __construct()
     {
         $this->teamMembers = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -73,33 +81,11 @@ class Team
     }
 
     /**
-     * @return Collection<int, TeamMember>
+     * @return Collection<int, User>
      */
     public function getTeamMembers(): Collection
     {
         return $this->teamMembers;
-    }
-
-    public function addTeamMember(TeamMember $teamMember): static
-    {
-        if (!$this->teamMembers->contains($teamMember)) {
-            $this->teamMembers->add($teamMember);
-            $teamMember->setTeam($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTeamMember(TeamMember $teamMember): static
-    {
-        if ($this->teamMembers->removeElement($teamMember)) {
-            // set the owning side to null (unless already changed)
-            if ($teamMember->getTeam() === $this) {
-                $teamMember->setTeam(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getTeamLead(): ?User
@@ -135,8 +121,7 @@ class Team
      */
     public function getVacationRequests(): array
     {
-        /** @var ReadableCollection<User> $teamMembers */
-        return $this->getTeamMembers()->map(function (TeamMember $teamMember) { return $teamMember->getMember(); })
+        return $this->getTeamMembers()
             ->reduce(function (array $accumulator, User $user) {
                 /** @var ReadableCollection<VacationRequest> $pendingVacationRequests */
                 $pendingVacationRequests = $user
@@ -155,5 +140,13 @@ class Team
     public function getPendingTeamVacationRequests(): array
     {
         return array_filter($this->getVacationRequests(), function (VacationRequest $vacationRequest) { return $vacationRequest->isPendingTeamLeadApproval(); });
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
     }
 }

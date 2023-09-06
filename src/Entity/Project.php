@@ -32,9 +32,15 @@ class Project
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: ProjectTeam::class)]
     private Collection $projectTeams;
 
+    #[ORM\JoinTable(name: 'project_team')]
+    #[ORM\JoinColumn(name: 'project_id')]
+    #[ORM\ManyToMany(targetEntity: Team::class)]
+    private Collection $teams;
+
     public function __construct()
     {
         $this->projectTeams = new ArrayCollection();
+        $this->teams = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -144,5 +150,13 @@ class Project
     public function getPendingProjectVacationRequests(): array
     {
         return array_filter($this->getVacationRequests(), function (VacationRequest $vacationRequest) { return $vacationRequest->isPendingProjectLeadApproval(); });
+    }
+
+    /**
+     * @return Collection<int, Team>
+     */
+    public function getTeams(): Collection
+    {
+        return $this->teams;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\TeamRepository;
 use App\Repository\VacationRequestRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class EmployeeController extends AbstractController
 {
     #[Route('/employee', name: 'app_employee')]
-    public function index(): Response
+    public function index(TeamRepository $tr): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -20,7 +21,6 @@ class EmployeeController extends AbstractController
 
         return $this->render('employee/index.html.twig', [
             'vacation_requests' => $vacationRequests,
-            // 'vacation_requests' => $vacationRequests,
             'user' => $user
         ]);
     }
@@ -32,10 +32,14 @@ class EmployeeController extends AbstractController
         $user = $this->getUser();
         $teamLeadVacationRequests = $vacationRequestRepo->getPendingTeamLeadVacationRequests($user);
         $projectLeadVacationRequests = $vacationRequestRepo->getPendingProjectLeadVacationRequests($user);
+        $teams = $user->getTeams();
+        $projects = $user->leaderOfProjects();
 
-        return $this->render('employee/index.html.twig', [
-            'vacation_requests' => $teamLeadVacationRequests,
-            // 'vacation_requests' => $vacationRequests,
+        return $this->render('employee/check.html.twig', [
+            'vacation_requests_team' => $teamLeadVacationRequests,
+            'vacation_requests_project' => $projectLeadVacationRequests,
+            'leader_of_teams' => $teams,
+            'leader_of_projects' => $projects,
             'user' => $user
         ]);
     }

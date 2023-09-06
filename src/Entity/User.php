@@ -49,10 +49,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: AnnualVacation::class, orphanRemoval: true)]
     private Collection $annualVacations;
 
+    #[ORM\JoinTable(name: 'team_member')]
+    #[ORM\JoinColumn(name: 'member_id', nullable: false)]
+    #[ORM\ManyToMany(targetEntity: Team::class, orphanRemoval: true)]
+    private Collection $teams;
+
     public function __construct()
     {
         $this->vacationRequests = new ArrayCollection();
         $this->annualVacations = new ArrayCollection();
+        $this->teams = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -259,5 +265,61 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isTeamLead(): bool
     {
         return in_array(Role::TeamLead, $this->getRoles());
+    }
+
+    /**
+     * @return Collection<int, Team>
+     */
+    public function getTeams(): Collection
+    {
+        return $this->teams;
+    }
+
+    /**
+     * @return Project[]
+     */
+    public function getProjects(): array
+    {
+        return $this->getTeams()->reduce(
+            function (array $accumulator, Team $team) {
+                $projects = $team->getProjects();
+                return array_unique(array_merge($accumulator, $projects->toArray()), SORT_REGULAR);
+            },
+            []
+        );
+    }
+
+    /**
+     * @return Team[]
+     */
+    public function leaderOfTeams(): array
+    {
+        if (! $this->isTeamLead()) {
+            return [];
+        }
+        return $this->getTeams()->filter(
+            function (Team $team) {
+                return $team->getTeamLead()->getId() === $this->getId();
+            }
+        )->toArray();
+    }
+
+    /**
+     * @return Project[]
+     */
+    public function leaderOfProjects(): array
+    {
+        if (! $this->isProjectLead()) {
+            return [];
+        }
+
+        return $this->getTeams()->reduce(
+            function (array $accumulator, Team $team) {
+                $projects = $team->getProjects()->filter(function (Project $project) { return $project->getProjectLead()->getId() === $this->getId(); });
+                return array_unique(array_merge($accumulator, $projects->toArray()), SORT_REGULAR);
+            },
+            []
+        );
+
     }
 }
