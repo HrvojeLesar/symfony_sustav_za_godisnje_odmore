@@ -300,6 +300,7 @@ class VacationRequest implements JsonSerializable
             'to' => $this->getToDate(),
             'status' => $this->getStatus(),
             'description' => $this->getDescription(),
+            'vacationDaysRequested' => $this->getDaysRequested(),
         ];
     }
 }

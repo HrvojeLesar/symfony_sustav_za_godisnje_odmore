@@ -9,10 +9,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PostPersist;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Project
+class Project implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -158,5 +159,12 @@ class Project
     public function getTeams(): Collection
     {
         return $this->teams;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'project' => $this->__toString(),
+        ];
     }
 }

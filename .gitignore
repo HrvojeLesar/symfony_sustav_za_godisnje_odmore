@@ -16,3 +16,4 @@
 ###< lexik/jwt-authentication-bundle ###
 
 api_request.sh
+token
