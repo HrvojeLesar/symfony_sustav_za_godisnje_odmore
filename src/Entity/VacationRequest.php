@@ -10,11 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use App\Validator\VacationRequest as VacationRequestValidator;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: VacationRequestRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[VacationRequestValidator]
-class VacationRequest
+class VacationRequest implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -290,5 +291,15 @@ class VacationRequest
         $this->description = $description;
 
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'from' => $this->getFromDate(),
+            'to' => $this->getToDate(),
+            'status' => $this->getStatus(),
+            'description' => $this->getDescription(),
+        ];
     }
 }

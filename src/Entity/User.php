@@ -10,12 +10,13 @@ use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PostPersist;
 use Exception;
+use JsonSerializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -321,5 +322,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             []
         );
 
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'first_name' => $this->getFirstName(),
+            'last_name' => $this->getLastName(),
+            'email' => $this->getEmail(),
+            'workplace' => $this->getWorkplace(),
+            'roles' => $this->getRoles(),
+            'vacation_requests' => $this->getVacationRequests()->toArray(),
+            'available_vacation_days' => $this->getAvailableVacationDays(),
+        ];
     }
 }

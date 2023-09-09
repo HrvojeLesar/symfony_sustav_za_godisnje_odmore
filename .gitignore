@@ -10,3 +10,9 @@
 ###< symfony/framework-bundle ###
 .php-cs-fixer.cache
 .phpactor.json
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+
+api_request.sh
