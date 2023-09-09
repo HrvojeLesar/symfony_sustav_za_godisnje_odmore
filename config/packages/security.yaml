@@ -1,3 +1,10 @@
+framework:
+  rate_limiter:
+    authenticated_api:
+      policy: 'sliding_window'
+      limit: 10
+      interval: '1 minute'
+
 security:
   # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
   password_hashers:
@@ -16,6 +23,8 @@ security:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
     login:
+      login_throttling:
+        max_attempts: 5
       pattern: ^/api/login
       json_login:
         check_path: /api/login_check
