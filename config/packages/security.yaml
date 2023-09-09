@@ -1,8 +1,9 @@
 framework:
+  http_cache: true
   rate_limiter:
     authenticated_api:
       policy: 'sliding_window'
-      limit: 10
+      limit: 100
       interval: '1 minute'
 
 security:
