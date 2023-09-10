@@ -5,11 +5,14 @@ namespace App\Entity;
 use App\Repository\VacationRequestRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\PostUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use App\Validator\VacationRequest as VacationRequestValidator;
+use Exception;
 use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: VacationRequestRepository::class)]
@@ -303,4 +306,15 @@ class VacationRequest implements JsonSerializable
             'vacationDaysRequested' => $this->getDaysRequested(),
         ];
     }
+
+    // #[PostUpdate]
+    // public function postUpdate(PostUpdateEventArgs $event): void
+    // {
+    //     if ($this->getStatus() === VacationRequestStatus::Approved) {
+    //         $isDelivered = mail($this->getUser()->getEmail(), 'Odobrenje zahtjeva za godišnji odmor', sprintf('Zatjev za godišnji odmor u razdoblju %s-%s je odobren.', $this->getFromDate()->format('d.m.Y'), $this->getToDate()->format('d.m.Y')));
+    //         if (! $isDelivered) {
+    //             throw new Exception('Failed to send e-mail to user');
+    //         }
+    //     }
+    // }
 }
