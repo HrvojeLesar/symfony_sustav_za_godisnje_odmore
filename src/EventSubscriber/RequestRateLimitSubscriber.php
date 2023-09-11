@@ -20,9 +20,14 @@ class RequestRateLimitSubscriber implements EventSubscriberInterface
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        $limiter = $this->authenticatedApiLimiter->create($event->getRequest()->getClientIp());
-        if ($limiter->consume()->isAccepted() === false) {
-            throw new TooManyRequestsHttpException();
+        $request = $event->getRequest();
+
+        $route = $request->get('_route');
+        if (str_contains($route, '_api')) {
+            $limiter = $this->authenticatedApiLimiter->create($event->getRequest()->getClientIp());
+            if ($limiter->consume()->isAccepted() === false) {
+                throw new TooManyRequestsHttpException();
+            }
         }
     }
 
