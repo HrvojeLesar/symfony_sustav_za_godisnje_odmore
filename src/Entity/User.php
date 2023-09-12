@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Exceptions\EntityNotFoundException;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -126,7 +127,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $entityManager = $event->getObjectManager();
         $annualVacation = new AnnualVacation();
         $annualVacation->setUser($this);
-        $annualVacation->setYear(date("Y"));
+        $annualVacation->setYear(date('Y'));
         $entityManager->persist($annualVacation);
         $entityManager->flush();
     }
@@ -237,6 +238,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
 
+    /**
+    * @throws NotFoundException
+    */
     public function getLatestAnnualVacation(): AnnualVacation
     {
         $annualVacation = $this->getAnnualVacations()
@@ -246,7 +250,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         ->first();
 
         if (is_null($annualVacation)) {
-            throw new Exception('Annual vacation not found');
+            throw new EntityNotFoundException('Annual vacation not found');
         }
 
         return $annualVacation;

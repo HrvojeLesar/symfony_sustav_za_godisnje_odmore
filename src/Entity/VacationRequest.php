@@ -306,15 +306,4 @@ class VacationRequest implements JsonSerializable
             'vacationDaysRequested' => $this->getDaysRequested(),
         ];
     }
-
-    // #[PostUpdate]
-    // public function postUpdate(PostUpdateEventArgs $event): void
-    // {
-    //     if ($this->getStatus() === VacationRequestStatus::Approved) {
-    //         $isDelivered = mail($this->getUser()->getEmail(), 'Odobrenje zahtjeva za godišnji odmor', sprintf('Zahtjev za godišnji odmor u razdoblju %s-%s je odobren.', $this->getFromDate()->format('d.m.Y'), $this->getToDate()->format('d.m.Y')));
-    //         if (! $isDelivered) {
-    //             throw new Exception('Failed to send e-mail to user');
-    //         }
-    //     }
-    // }
 }

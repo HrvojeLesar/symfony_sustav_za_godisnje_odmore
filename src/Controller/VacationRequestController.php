@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\AnnualVacation;
 use App\Entity\VacationRequest;
 use App\Entity\User;
+use App\Exceptions\InvalidPermissionsException;
+use App\Exceptions\NotRemovableException;
 use App\Form\VacationRequestFormType;
 use App\Message\ApprovalNotification;
 use App\Repository\AnnualVacationRepository;
@@ -64,13 +66,13 @@ class VacationRequestController extends AbstractController
         }
 
         if (! $vacationRequest->isRemovable()) {
-            throw new Exception('Selected VacationRequest is not removable');
+            throw new NotRemovableException();
         }
 
         /** @var User $user */
         $user = $this->getUser();
         if ($vacationRequest->getUser()->getId() !== $user->getId()) {
-            throw new Exception('User has no permissions for this action.');
+            throw new InvalidPermissionsException();
         }
 
         $entityManager->remove($vacationRequest);
@@ -132,7 +134,7 @@ class VacationRequestController extends AbstractController
 
     /**
      * @return void
-     * @throws Exception
+     * @throws InvalidPermssionsException
      */
     protected function teamLeadApproval(bool $isApproved, VacationRequest $vacationRequest, EntityManagerInterface $entityManager): void
     {
@@ -146,7 +148,7 @@ class VacationRequestController extends AbstractController
         $teamMatch = array_unique(array_merge($employeeTeams, $granteeTeams), SORT_REGULAR);
 
         if (count($teamMatch) === 0) {
-            throw new Exception('User has no permissions for this action.');
+            throw new InvalidPermissionsException();
         }
 
         $vacationRequest->setIsApprovedByTeamLead($isApproved);
@@ -157,7 +159,7 @@ class VacationRequestController extends AbstractController
 
     /**
      * @return void
-     * @throws Exception
+     * @throws InvalidPermssionsException
      */
     protected function projectLeadApproval(bool $isApproved, VacationRequest $vacationRequest, EntityManagerInterface $entityManager): void
     {
@@ -171,7 +173,7 @@ class VacationRequestController extends AbstractController
         $projectMatch = array_unique(array_merge($employeeProjects, $granteeProjects), SORT_REGULAR);
 
         if (count($projectMatch) === 0) {
-            throw new Exception('User has no permissions for this action.');
+            throw new InvalidPermissionsException();
         }
 
         $vacationRequest->setIsApprovedByProjectLead($isApproved);
