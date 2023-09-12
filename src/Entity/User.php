@@ -55,6 +55,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     #[ORM\ManyToMany(targetEntity: Team::class, orphanRemoval: true)]
     private Collection $teams;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $last_login_date = null;
+
     public function __construct()
     {
         $this->vacationRequests = new ArrayCollection();
@@ -355,5 +358,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
             $this->getEmail(),
             $this->getWorkplace() ? $this->getWorkplace()->__toString() : '',
         ]);
+    }
+
+    public function getLastLoginDate(): ?\DateTimeInterface
+    {
+        return $this->last_login_date;
+    }
+
+    public function setLastLoginDate(?\DateTimeInterface $last_login_date): static
+    {
+        $this->last_login_date = $last_login_date;
+
+        return $this;
     }
 }

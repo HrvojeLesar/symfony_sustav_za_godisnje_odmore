@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class EmployeeController extends AbstractController
 {
     #[Route('', name: '', methods: 'GET')]
-    public function index(TeamRepository $tr): Response
+    public function index(TeamRepository $teamRepository): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -29,12 +29,12 @@ class EmployeeController extends AbstractController
     }
 
     #[Route('/check-vacation-requests', name: '_check_vacation_requests', methods: 'GET')]
-    public function checkVacationRequests(EntityManagerInterface $entityManager, VacationRequestRepository $vacationRequestRepo): Response
+    public function checkVacationRequests(EntityManagerInterface $entityManager, VacationRequestRepository $vacationRequestRepository): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        $teamLeadVacationRequests = $vacationRequestRepo->getPendingTeamLeadVacationRequests($user);
-        $projectLeadVacationRequests = $vacationRequestRepo->getPendingProjectLeadVacationRequests($user);
+        $teamLeadVacationRequests = $vacationRequestRepository->getPendingTeamLeadVacationRequests($user);
+        $projectLeadVacationRequests = $vacationRequestRepository->getPendingProjectLeadVacationRequests($user);
         $teams = $user->getTeams();
         $projects = $user->leaderOfProjects();
 
