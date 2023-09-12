@@ -53,17 +53,17 @@ class VacationRequestController extends AbstractController
         ]);
     }
 
-    #[Route('/vacation/remove/{id}', name: 'app_vacation_request_remove')]
+    #[Route('/remove/{id}', name: '_request_remove', methods: 'POST')]
     public function removeVacationRequest(int $id, EntityManagerInterface $entityManager, VacationRequestRepository $vacationRequestRepo): Response
     {
         $vacationRequest = $vacationRequestRepo->find($id);
 
         if (is_null($vacationRequest)) {
-            throw new InvalidArgumentException("Provided id does not correspond to a VacationRequest");
+            throw new InvalidArgumentException('Provided id does not correspond to a VacationRequest');
         }
 
         if (! $vacationRequest->isRemovable()) {
-            throw new Exception("Selected VacationRequest is not removable");
+            throw new Exception('Selected VacationRequest is not removable');
         }
 
         /** @var User $user */
@@ -123,7 +123,7 @@ class VacationRequestController extends AbstractController
         $vacationRequest = $vacationRequestRepo->find($id);
 
         if (is_null($vacationRequest)) {
-            throw new InvalidArgumentException("Provided id does not correspond to a VacationRequest");
+            throw new InvalidArgumentException('Provided id does not correspond to a VacationRequest');
         }
 
         return $vacationRequest;

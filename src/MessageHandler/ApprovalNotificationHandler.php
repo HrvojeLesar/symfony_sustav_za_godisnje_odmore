@@ -27,7 +27,7 @@ class ApprovalNotificationHandler
                 ->to($vacationRequest->getUser()->getEmail())
                 ->subject('Odobrenje zahtjeva za godišnji odmor')
                 ->text(sprintf(
-                    'Zatjev za godišnji odmor u razdoblju %s-%s je odobren.',
+                    'Zahtjev za godišnji odmor u razdoblju %s-%s je odobren.',
                     $vacationRequest->getFromDate()->format('d.m.Y'),
                     $vacationRequest->getToDate()->format('d.m.Y')
                 ))

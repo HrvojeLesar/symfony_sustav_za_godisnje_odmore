@@ -28,8 +28,8 @@ class ProjectRepository extends ServiceEntityRepository
     public function getProjectsByLeader(User $user): array
     {
         return $this->createQueryBuilder('p')
-            ->where("p.projectLead = :projectLead")
-            ->setParameter("projectLead", $user)
+            ->where('p.projectLead = :projectLead')
+            ->setParameter('projectLead', $user)
             ->getQuery()
             ->getResult()
         ;

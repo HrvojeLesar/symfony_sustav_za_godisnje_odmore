@@ -209,7 +209,7 @@ class VacationRequest implements JsonSerializable
     #[PrePersist]
     public function prePersist(): void
     {
-        $this->setCreatedAt(new DateTime("now"));
+        $this->setCreatedAt(new DateTime('now'));
         $this->setDaysRequested(
             intval(
                 $this->getFromDate()->diff($this->getToDate())->format('%a')
@@ -220,12 +220,12 @@ class VacationRequest implements JsonSerializable
     #[PreUpdate]
     public function preUpdate(PreUpdateEventArgs $event): void
     {
-        $this->setUpdatedAt(new DateTime("now"));
+        $this->setUpdatedAt(new DateTime('now'));
         if ($event->hasChangedField('approvedByTeamLead') || $event->hasChangedField('isApprovedByTeamLead')) {
-            $this->setApprovalStatusTeamUpdatedAt(new DateTime("now"));
+            $this->setApprovalStatusTeamUpdatedAt(new DateTime('now'));
         }
         if ($event->hasChangedField('approvedByProjectLead') || $event->hasChangedField('isApprovedByProjectLead')) {
-            $this->setApprovalStatusProjectUpdatedAt(new DateTime("now"));
+            $this->setApprovalStatusProjectUpdatedAt(new DateTime('now'));
         }
     }
 
@@ -311,7 +311,7 @@ class VacationRequest implements JsonSerializable
     // public function postUpdate(PostUpdateEventArgs $event): void
     // {
     //     if ($this->getStatus() === VacationRequestStatus::Approved) {
-    //         $isDelivered = mail($this->getUser()->getEmail(), 'Odobrenje zahtjeva za godišnji odmor', sprintf('Zatjev za godišnji odmor u razdoblju %s-%s je odobren.', $this->getFromDate()->format('d.m.Y'), $this->getToDate()->format('d.m.Y')));
+    //         $isDelivered = mail($this->getUser()->getEmail(), 'Odobrenje zahtjeva za godišnji odmor', sprintf('Zahtjev za godišnji odmor u razdoblju %s-%s je odobren.', $this->getFromDate()->format('d.m.Y'), $this->getToDate()->format('d.m.Y')));
     //         if (! $isDelivered) {
     //             throw new Exception('Failed to send e-mail to user');
     //         }

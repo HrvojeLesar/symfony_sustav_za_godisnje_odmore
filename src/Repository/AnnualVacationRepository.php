@@ -29,7 +29,7 @@ class AnnualVacationRepository extends ServiceEntityRepository
         $userRepo = $entityManager->getRepository(User::class);
         $userRepo->findAll();
         $users = $userRepo->getAllUsersWithNoAnnualVacationRecord();
-        $year = date("Y");
+        $year = date('Y');
         foreach ($users as &$user) {
             $annualVacation = new AnnualVacation();
             $annualVacation->setUser($user);

@@ -120,13 +120,13 @@ class AnnualVacation
     #[PrePersist]
     public function prePersist(): void
     {
-        $this->setCreatedAt(new DateTime("now"));
+        $this->setCreatedAt(new DateTime('now'));
     }
 
     #[PreUpdate]
     public function preUpdate(): void
     {
-        $this->setUpdatedAt(new DateTime("now"));
+        $this->setUpdatedAt(new DateTime('now'));
     }
 
     public function availableVacationDays(): int

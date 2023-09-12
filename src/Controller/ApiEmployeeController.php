@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
+use App\Exceptions\EmployeeNotFoundException;
 use App\Repository\UserRepository;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
@@ -21,40 +21,40 @@ class ApiEmployeeController extends AbstractController
         return $this->json($employees);
     }
 
-    #[Route('/employee/teams/{id}', name: 'app_api_employee_teams')]
+    #[Route('/employee/{id}/teams', name: '_employee_teams', methods: 'GET')]
     #[Cache(public: true, maxage: 60, mustRevalidate: true)]
     public function employeeTeams(int $id, UserRepository $userRepository): Response
     {
         $employee = $userRepository->find($id);
 
         if (is_null($employee)) {
-            throw new Exception("Employee not found");
+            throw new EmployeeNotFoundException();
         }
 
         return $this->json($employee->getTeams());
     }
 
-    #[Route('/employee/projects/{id}', name: 'app_api_employee_projects')]
+    #[Route('/employee/{id}/projects', name: '_employee_projects', methods: 'GET')]
     #[Cache(public: true, maxage: 60, mustRevalidate: true)]
     public function employeeProjects(int $id, UserRepository $userRepository): Response
     {
         $employee = $userRepository->find($id);
 
         if (is_null($employee)) {
-            throw new Exception("Employee not found");
+            throw new EmployeeNotFoundException();
         }
 
         return $this->json($employee->getProjects());
     }
 
-    #[Route('/employee/vacation-requests/{id}', name: 'app_api_employee_vacation_requests')]
+    #[Route('/employee/{id}/vacation-requests', name: '_employee_vacation_requests', methods: 'GET')]
     #[Cache(public: true, maxage: 60, mustRevalidate: true)]
     public function employeeVacationRequests(int $id, UserRepository $userRepository): Response
     {
         $employee = $userRepository->find($id);
 
         if (is_null($employee)) {
-            throw new Exception("Employee not found");
+            throw new EmployeeNotFoundException();
         }
 
         return $this->json($employee->getVacationRequests());

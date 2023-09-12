@@ -28,8 +28,8 @@ class TeamRepository extends ServiceEntityRepository
     public function getTeamsByLeader(User $user): array
     {
         return $this->createQueryBuilder('t')
-            ->where("t.teamLead = :teamLead")
-            ->setParameter("teamLead", $user)
+            ->where('t.teamLead = :teamLead')
+            ->setParameter('teamLead', $user)
             ->getQuery()
             ->getResult()
         ;

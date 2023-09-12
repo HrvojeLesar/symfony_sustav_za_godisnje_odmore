@@ -246,7 +246,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         ->first();
 
         if (is_null($annualVacation)) {
-            throw new Exception("Annual vacation not found");
+            throw new Exception('Annual vacation not found');
         }
 
         return $annualVacation;
@@ -327,6 +327,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function jsonSerialize(): mixed
     {
         return [
+            'id' => $this->getId(),
             'first_name' => $this->getFirstName(),
             'last_name' => $this->getLastName(),
             'email' => $this->getEmail(),
