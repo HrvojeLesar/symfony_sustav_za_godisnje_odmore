@@ -3,12 +3,18 @@
 namespace App\Repository;
 
 use App\Entity\AnnualVacation;
+use App\Entity\Project;
+use App\Entity\Team;
 use App\Entity\User;
+use App\Entity\VacationRequest;
+use App\Exceptions\EmployeeNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -20,7 +26,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, protected CacheInterface $cache)
     {
         parent::__construct($registry, User::class);
     }
@@ -52,5 +58,76 @@ class UserRepository extends ServiceEntityRepository
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getAllUsersCached(): array
+    {
+        /** @var User[] $users */
+        $users = $this->cache->get('users', function (ItemInterface $item): array {
+            $item->expiresAfter(60);
+            return $this->findAll();
+        });
+        return $users;
+    }
+
+    /**
+     * @throws EmployeeNotFoundException
+     */
+    public function getUser(int $id): User
+    {
+        /** @var User|null $user */
+        $user = $this->find($id);
+        if (is_null($user)) {
+            throw new EmployeeNotFoundException();
+        }
+        return $user;
+    }
+
+    /**
+     * @throws EmployeeNotFoundException
+     * @return Team[]
+     */
+    public function getUserTeamsCached(int $id): array
+    {
+        /** @var Team[] $teams */
+        $teams = $this->cache->get('user_id_'.$id.'_teams', function (ItemInterface $item) use ($id): array {
+            $item->expiresAfter(60);
+            $user = $this->getUser($id);
+            return $user->getTeams()->toArray();
+        });
+        return $teams;
+    }
+
+    /**
+     * @throws EmployeeNotFoundException
+     * @return Project[]
+     */
+    public function getUserProjectsCached(int $id): array
+    {
+        /** @var Project[] $projects */
+        $projects = $this->cache->get('user_id_'.$id.'_projects', function (ItemInterface $item) use ($id): array {
+            $item->expiresAfter(60);
+            $user = $this->getUser($id);
+            return $user->getProjects();
+        });
+        return $projects;
+    }
+
+    /**
+     * @throws EmployeeNotFoundException
+     * @return VacationRequest[]
+     */
+    public function getUserVacationRequestsCached(int $id): array
+    {
+        /** @var VacationRequest[] $projects */
+        $vacationRequests = $this->cache->get('user_id_'.$id.'_vacation_requests', function (ItemInterface $item) use ($id): array {
+            $item->expiresAfter(60);
+            $user = $this->getUser($id);
+            return $user->getVacationRequests()->toArray();
+        });
+        return $vacationRequests;
     }
 }

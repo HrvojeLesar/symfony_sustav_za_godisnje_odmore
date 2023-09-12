@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping\PreUpdate;
 #[ORM\HasLifecycleCallbacks]
 class AnnualVacation
 {
-    private const MAXIMUMVACATIONDAYS = 20;
+    private const ANNUAL_VACATION_DAYS = 20;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -31,7 +31,7 @@ class AnnualVacation
     private ?string $year = null;
 
     #[ORM\Column(name: 'maximum_vacation_days')]
-    private int $maximumVacationDays = self::MAXIMUMVACATIONDAYS;
+    private int $maximumVacationDays = self::ANNUAL_VACATION_DAYS;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
