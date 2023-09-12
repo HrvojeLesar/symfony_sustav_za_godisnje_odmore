@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\TeamRepository;
+use App\Repository\UserRepository;
 use App\Repository\VacationRequestRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,4 +46,18 @@ class EmployeeController extends AbstractController
         ]);
     }
 
+    #[Route('/employees.csv', name: '_employees_csv', methods: 'GET')]
+    public function employeesCSV(UserRepository $userRepository): Response
+    {
+        $users = $userRepository->findAll();
+        $data = [User::getCSVHeader()];
+        foreach($users as &$user) {
+            $data[] = $user->toCSV();
+        }
+        $dataStringified = implode("\n", $data);
+
+        $response = new Response($dataStringified);
+        $response->headers->set('Content-Type', 'text/csv');
+        return $response;
+    }
 }

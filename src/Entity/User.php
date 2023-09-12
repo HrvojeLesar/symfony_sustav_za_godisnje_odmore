@@ -340,4 +340,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
             'available_vacation_days' => $this->getAvailableVacationDays(),
         ];
     }
+
+    public static function getCSVHeader(): string
+    {
+        return 'id,first_name,last_name,email,workplace';
+    }
+
+    public function toCSV(): string
+    {
+        return implode(',', [
+            $this->getId(),
+            $this->getFirstName(),
+            $this->getLastName(),
+            $this->getEmail(),
+            $this->getWorkplace() ? $this->getWorkplace()->__toString() : '',
+        ]);
+    }
 }
