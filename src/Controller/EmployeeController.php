@@ -7,6 +7,7 @@ use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
 use App\Repository\VacationRequestRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Dompdf\Dompdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,8 +57,22 @@ class EmployeeController extends AbstractController
         }
         $dataStringified = implode("\n", $data);
 
-        $response = new Response($dataStringified);
-        $response->headers->set('Content-Type', 'text/csv');
-        return $response;
+        return new Response($dataStringified, Response::HTTP_OK, ['Content-Type' => 'text/csv']);
+    }
+
+    #[Route('/employees.pdf', name: '_employees_pdf', methods: 'GET')]
+    public function employeesPDF(UserRepository $userRepository): Response
+    {
+        $users = $userRepository->findAll();
+
+        $renderedView = $this->renderView('pdf/users.html.twig', [
+            'users' => $users
+        ]);
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($renderedView);
+        $dompdf->render();
+
+        return new Response($dompdf->stream('resume', ['Attachment' => false]), Response::HTTP_OK, ['Content-Type' => 'application/pdf']);
     }
 }

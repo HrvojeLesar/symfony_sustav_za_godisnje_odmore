@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+{% trans %}controller.pdf.users.title{% endtrans %}
+{% endblock %}
+
+{% block body %}
+<div class="d-flex flex-column container">
+    <table class="table table-bordered align-middle">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">
+                    {% trans %}controller.employee.first_name{% endtrans %}:
+                </th>
+                <th scope="col">
+                    {% trans %}controller.employee.last_name{% endtrans %}:
+                </th>
+                <th scope="col">
+                    {% trans %}controller.employee.email{% endtrans %}:
+                </th>
+                <th scope="col">
+                    {% trans %}controller.employee.workplace{% endtrans %}:
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.workplace }}</td>
+            </tr>
+            {% if user.vacationRequests|length > 0%}
+            <tr>
+                <td></td>
+                <td colspan="4">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">{% trans %}controller.employee.from_to{% endtrans %}</th>
+                                <th scope="col">{% trans %}controller.employee.status{% endtrans %}</th>
+                                <th scope="col">{% trans %}controller.employee.description{% endtrans %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in user.vacationRequests %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ request.getFromDate|date('d.m.Y') }} - {{ request.getToDate|date('d.m.Y') }} ({{
+                                    request.daysRequested }})</td>
+                                <td>{{ request.getStatus|trans }}</td>
+                                <td>{{ request.getDescription }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            </tr>
+            {% endif %}
+            </td>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

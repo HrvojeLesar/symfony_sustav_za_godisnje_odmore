@@ -1,0 +1,4 @@
+controller:
+  pdf:
+    users:
+      title: Popis zaposlenika
