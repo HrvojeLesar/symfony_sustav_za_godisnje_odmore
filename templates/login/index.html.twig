@@ -1,17 +1,27 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+{% trans %}controller.login.title{% endtrans %}
+{% endblock %}
+
 {% block body %}
 <div class="d-flex justify-content-center container mt-5">
     <form class="p-3 border" action="{{ path('app_login') }}" method="post" style="max-width: 300px;">
-        <h1 class="h3 mb-3 fw-normal">Prijava</h1>
+        <h1 class="h3 mb-3 fw-normal">
+            {% trans %}controller.login.title{% endtrans %}
+        </h1>
         <div class="form-floating mb-2">
             <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="_username"
                 value="{{ last_username }}">
-            <label for="floatingInput">Email</label>
+            <label for="floatingInput">
+                {% trans %}controller.login.email{% endtrans %}
+            </label>
         </div>
         <div class="form-floating mb-2">
             <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="_password">
-            <label for="floatingPassword">Lozinka</label>
+            <label for="floatingPassword">
+                {% trans %}controller.login.password{% endtrans %}
+            </label>
         </div>
 
         {% if error %}
@@ -20,7 +30,9 @@
 
         <input type="hidden" name="_target_path" value="/employee">
 
-        <button class="btn btn-primary w-100" type="submit">Prijava</button>
+        <button class="btn btn-primary w-100" type="submit">
+            {% trans %}controller.login.login{% endtrans %}
+        </button>
     </form>
 </div>
 {% endblock %}

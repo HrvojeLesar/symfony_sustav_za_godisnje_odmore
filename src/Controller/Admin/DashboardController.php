@@ -16,9 +16,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DashboardController extends AbstractDashboardController
 {
+    public function __construct(protected TranslatorInterface $translator)
+    {
+    }
+
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
@@ -27,41 +32,24 @@ class DashboardController extends AbstractDashboardController
         $url = $routeBuilder->setController(UserCrudController::class)->generateUrl();
 
         return $this->redirect($url);
-        // return parent::index();
-
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
-
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirect('...');
-        // }
-
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        // return $this->render('some/path/my-dashboard.html.twig');
     }
 
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Godišnji Odmor');
+            ->setTitle($this->translator->trans('admin.title'));
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToCrud('Project', 'fas fa-home', Project::class);
-        yield MenuItem::linkToCrud('ProjectTeam', 'fas fa-home', ProjectTeam::class);
-        yield MenuItem::linkToCrud('Team', 'fas fa-home', Team::class);
-        yield MenuItem::linkToCrud('TeamMember', 'fas fa-home', TeamMember::class);
-        yield MenuItem::linkToCrud('User', 'fas fa-home', User::class);
-        yield MenuItem::linkToCrud('Workplace', 'fas fa-home', Workplace::class);
+        yield MenuItem::linkToCrud($this->translator->trans('admin.project'), 'fas fa-home', Project::class);
+        yield MenuItem::linkToCrud($this->translator->trans('admin.project_team'), 'fas fa-home', ProjectTeam::class);
+        yield MenuItem::linkToCrud($this->translator->trans('admin.team'), 'fas fa-home', Team::class);
+        yield MenuItem::linkToCrud($this->translator->trans('admin.team_member'), 'fas fa-home', TeamMember::class);
+        yield MenuItem::linkToCrud($this->translator->trans('admin.user'), 'fas fa-home', User::class);
+        yield MenuItem::linkToCrud($this->translator->trans('admin.workplace'), 'fas fa-home', Workplace::class);
 
-        yield MenuItem::linkToCrud('AnnualVacation', 'fas fa-home', AnnualVacation::class);
-        yield MenuItem::linkToCrud('VacationRequest', 'fas fa-home', VacationRequest::class);
+        yield MenuItem::linkToCrud($this->translator->trans('admin.annual_vacation'), 'fas fa-home', AnnualVacation::class);
+        yield MenuItem::linkToCrud($this->translator->trans('admin.vacation_request'), 'fas fa-home', VacationRequest::class);
     }
 }

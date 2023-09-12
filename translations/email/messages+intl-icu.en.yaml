@@ -1,0 +1,8 @@
+email:
+  approved:
+    subject: Vacation request has been approved
+    text: >-
+      {days, plural,
+        =1 {Vacation request in the period {from}-{to} has been approved. Approved 1 day of annual vacation.}
+        other {Vacation request in the period {from}-{to} has been approved. Approved # days of annual vacation.}
+      }

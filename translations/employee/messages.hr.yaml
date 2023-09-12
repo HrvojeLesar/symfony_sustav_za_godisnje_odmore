@@ -1,0 +1,22 @@
+controller:
+  employee:
+    title: Pregled zahtjeva
+    first_name: Ime
+    last_name: Prezime
+    email: E-mail
+    workplace: Radno mjesto
+    team_lead: Voditelj tima
+    project_lead: Voditelj projekta
+    employee: Zaposlenik
+    from_to: Od-Do
+    status: Status
+    description: Opis
+    table_title: Pregled zahtjeva
+    project: Projekt
+    team: Tim
+    approve: Odobri
+    reject: Odbij
+    available_vacation_days: Preostalo dana godišnjega
+    view_vacation_requests: Pregled zahtjeva na čekanju
+    delete: Brisanje
+    new_request: Novi zahtjev

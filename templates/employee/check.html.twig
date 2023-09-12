@@ -1,28 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello EmployeeController!{% endblock %}
+{% block title %}
+{% trans %}controller.employee.title{% endtrans %}
+{% endblock %}
 
 {% block body %}
 {% if user %}
 <div class="d-flex flex-column container">
     <div class="d-flex flex-column border align-self-start justify-content-start my-2 p-2">
         <div>
-            <b>Ime: </b><span>{{ user.firstName }}</span>
+            <b>
+                {% trans %}controller.employee.first_name{% endtrans %}:
+            </b>
+            <span>{{ user.firstName }}</span>
         </div>
         <div>
-            <b>Prezime: </b><span>{{ user.lastName }}</span>
+            <b>
+                {% trans %}controller.employee.last_name{% endtrans %}:
+            </b>
+            <span>{{ user.lastName }}</span>
         </div>
         <div>
-            <b>Email: </b><span>{{ user.email }}</span>
+            <b>
+                {% trans %}controller.employee.email{% endtrans %}:
+            </b>
+            <span>{{ user.email }}</span>
         </div>
         {% if user.workplace %}
         <div>
-            <b>Radno mjesto: </b><span>{{ user.workplace }}</span>
+            <b>
+                {% trans %}controller.employee.workplace{% endtrans %}:
+            </b>
+            <span>{{ user.workplace }}</span>
         </div>
         {% endif %}
         {% if user.isTeamLead %}
         <div>
-            <b>Voditelj tima: </b>
+            <b>
+                {% trans %}controller.employee.team_lead{% endtrans %}:
+            </b>
             {% for team in leader_of_teams %}
             {% if loop.index0 == 0 %}
             <span>{{ team.getName }}</span>
@@ -34,7 +50,9 @@
         {% endif %}
         {% if user.isProjectLead %}
         <div>
-            <b>Voditelj projekta: </b><span>{{ user.firstName }}</span>
+            <b>
+                {% trans %}controller.employee.project_lead{% endtrans %}:
+            </b>
         </div>
         {% endif %}
     </div>
@@ -42,15 +60,17 @@
 
     {% if user.isTeamLead %}
     <div class="border p-2">
-        <h2>Pregled zahtjeva (tim)</h2>
+        <h2>
+            {% trans %}controller.employee.table_title{% endtrans %} ({% trans %}controller.employee.team{% endtrans %})
+        </h2>
         <table class="table align-middle">
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Zaposlenik</th>
-                    <th scope="col">Od-Do</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Opis</th>
+                    <th scope="col">{% trans %}controller.employee.employee{% endtrans %}</th>
+                    <th scope="col">{% trans %}controller.employee.from_to{% endtrans %}</th>
+                    <th scope="col">{% trans %}controller.employee.status{% endtrans %}</th>
+                    <th scope="col">{% trans %}controller.employee.description{% endtrans %}</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -61,7 +81,7 @@
                     <td>{{ request.getUser().firstName }} {{ request.getUser().lastName }}</td>
                     <td>{{ request.getFromDate|date('d.m.Y') }} - {{ request.getToDate|date('d.m.Y') }} ({{
                         request.daysRequested }})</td>
-                    <td>{{ request.getStatus }}</td>
+                    <td>{{ request.getStatus|trans }}</td>
                     <td>{{ request.getDescription }}</td>
                     <td>
                         <div class="dropdown">
@@ -70,11 +90,21 @@
                                 ...
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item"
-                                        href="{{ path('app_vacation_request_team_lead_grant', { id: request.getId }) }}">Odobri</a>
+                                <li>
+                                    <form
+                                        action="{{ path('app_vacation_request_team_lead_grant', { id: request.getId })}}"
+                                        method="post">
+                                        <input class="dropdown-item" type="submit"
+                                            value="{% trans %}controller.employee.approve{% endtrans %}">
+                                    </form>
                                 </li>
-                                <li><a class="dropdown-item"
-                                        href="{{ path('app_vacation_request_team_lead_reject', { id: request.getId }) }}">Odbij</a>
+                                <li>
+                                    <form
+                                        action="{{ path('app_vacation_request_team_lead_reject', { id: request.getId })}}"
+                                        method="post">
+                                        <input class="dropdown-item" type="submit"
+                                            value="{% trans %}controller.employee.reject{% endtrans %}">
+                                    </form>
                                 </li>
                             </ul>
                         </div>
@@ -87,15 +117,18 @@
     {% endif %}
     {% if user.isProjectLead %}
     <div class="border p-2">
-        <h2>Pregled zahtjeva (projekt)</h2>
+        <h2>
+            {% trans %}controller.employee.table_title{% endtrans %} ({% trans %}controller.employee.project{% endtrans
+            %})
+        </h2>
         <table class="table align-middle">
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Zaposlenik</th>
-                    <th scope="col">Od-Do</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Opis</th>
+                    <th scope="col">{% trans %}controller.employee.employee{% endtrans %}</th>
+                    <th scope="col">{% trans %}controller.employee.from_to{% endtrans %}</th>
+                    <th scope="col">{% trans %}controller.employee.status{% endtrans %}</th>
+                    <th scope="col">{% trans %}controller.employee.description{% endtrans %}</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -106,7 +139,7 @@
                     <td>{{ request.getUser().firstName }} {{ request.getUser().lastName }}</td>
                     <td>{{ request.getFromDate|date('d.m.Y') }} - {{ request.getToDate|date('d.m.Y') }} ({{
                         request.daysRequested }})</td>
-                    <td>{{ request.getStatus }}</td>
+                    <td>{{ request.getStatus|trans }}</td>
                     <td>{{ request.getDescription }}</td>
                     <td>
                         <div class="dropdown">
@@ -115,11 +148,21 @@
                                 ...
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item"
-                                        href="{{ path('app_vacation_request_project_lead_grant', { id: request.getId }) }}">Odobri</a>
+                                <li>
+                                    <form
+                                        action="{{ path('app_vacation_request_project_lead_grant', { id: request.getId })}}"
+                                        method="post">
+                                        <input class="dropdown-item" type="submit"
+                                            value="{% trans %}controller.employee.approve{% endtrans %}">
+                                    </form>
                                 </li>
-                                <li><a class="dropdown-item"
-                                        href="{{ path('app_vacation_request_project_lead_reject', { id: request.getId }) }}">Odbij</a>
+                                <li>
+                                    <form
+                                        action="{{ path('app_vacation_request_project_lead_reject', { id: request.getId })}}"
+                                        method="post">
+                                        <input class="dropdown-item" type="submit"
+                                            value="{% trans %}controller.employee.reject{% endtrans %}">
+                                    </form>
                                 </li>
                             </ul>
                         </div>

@@ -1,0 +1,6 @@
+controller:
+  login:
+    title: Prijava
+    email: E-mail
+    password: Lozinka
+    login: Prijava

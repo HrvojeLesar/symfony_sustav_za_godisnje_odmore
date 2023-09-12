@@ -12,7 +12,6 @@ use App\Message\ApprovalNotification;
 use App\Repository\AnnualVacationRepository;
 use App\Repository\VacationRequestRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

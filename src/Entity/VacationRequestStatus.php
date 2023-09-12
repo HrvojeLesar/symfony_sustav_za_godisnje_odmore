@@ -2,11 +2,25 @@
 
 namespace App\Entity;
 
-abstract class VacationRequestStatus
+use Symfony\Contracts\Translation\TranslatableInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+enum VacationRequestStatus: string implements TranslatableInterface
 {
-    public const Rejected = 'Zahtjev odbijen.';
-    public const Approved = 'Zahtjev odobren.';
-    public const PendingTeamLead = 'Čekanje na odobrenje voditelja tima.';
-    public const PendingProjectLead = 'Čekanje na odobrenje voditelja projekta.';
-    public const Pending = 'Čekanje odobrenja.';
+    case Rejected = 'Rejected';
+    case Approved = 'Approved';
+    case PendingTeamLead = 'PendingTeamLead';
+    case PendingProjectLead = 'PendingProjectLead';
+    case Pending = 'Pending';
+
+    public function trans(TranslatorInterface $translator, string $locale = null): string
+    {
+        return match ($this) {
+            self::Rejected => $translator->trans('vacation_request.status.rejected'),
+            self::Approved => $translator->trans('vacation_request.status.approved'),
+            self::PendingTeamLead => $translator->trans('vacation_request.status.pending_team_lead'),
+            self::PendingProjectLead => $translator->trans('vacation_request.status.pending_project_lead'),
+            self::Pending => $translator->trans('vacation_request.status.pending'),
+        };
+    }
 }

@@ -1,14 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello VacationRequestController!{% endblock %}
+{% block title %}
+{% trans %}controller.vacation_request.title{% endtrans %}
+{% endblock %}
 
 {% block body %}
 <div class="d-flex justify-content-center container mt-5">
     <div class="border p-2" style="min-width: 300px;">
-        <h1 class="h3 mb-3 fw-normal">Novi zahtjev</h1>
+        <h1 class="h3 mb-3 fw-normal">
+            {% trans %}controller.vacation_request.title{% endtrans %}
+        </h1>
         {% if user %}
         <div class="my-2">
-            <b>Preostalo dana godišnjega: </b><span>{{ user.getAvailableVacationDays }}</span>
+            <b>
+                {% trans %}controller.vacation_request.available_vacation_days{% endtrans %}:
+            </b><span>{{ user.getAvailableVacationDays }}</span>
         </div>
         {% endif %}
         {{ form(form) }}

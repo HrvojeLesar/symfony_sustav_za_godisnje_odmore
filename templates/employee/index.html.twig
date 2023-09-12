@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello EmployeeController!{% endblock %}
+{% block title %}
+{% trans %}controller.employee.title{% endtrans %}
+{% endblock %}
 
 {% block body %}
 {% if user %}
@@ -8,39 +10,58 @@
     <div class="d-flex justify-content-between">
         <div class="d-flex flex-column border align-self-start justify-content-start my-2 p-2">
             <div>
-                <b>Ime: </b><span>{{ user.firstName }}</span>
+                <b>
+                    {% trans %}controller.employee.first_name{% endtrans %}:
+                </b>
+                <span>{{ user.firstName }}</span>
             </div>
             <div>
-                <b>Prezime: </b><span>{{ user.lastName }}</span>
+                <b>
+                    {% trans %}controller.employee.last_name{% endtrans %}:
+                </b>
+                <span>{{ user.lastName }}</span>
             </div>
             <div>
-                <b>Email: </b><span>{{ user.email }}</span>
+                <b>
+                    {% trans %}controller.employee.email{% endtrans %}:
+                </b>
+                <span>{{ user.email }}</span>
             </div>
             {% if user.workplace %}
             <div>
-                <b>Radno mjesto: </b><span>{{ user.workplace }}</span>
+                <b>
+                    {% trans %}controller.employee.workplace{% endtrans %}:
+                </b>
+                <span>{{ user.workplace }}</span>
             </div>
             {% endif %}
             <div>
-                <b>Preostalo dana godišnjega: </b><span>{{ user.getAvailableVacationDays }}</span>
+                <b>
+                    {% trans %}controller.employee.available_vacation_days{% endtrans %}:
+                </b>
+                <span>{{ user.getAvailableVacationDays }}</span>
             </div>
         </div>
         {% if user.isTeamLead or user.isProjectLead %}
         <div class="d-flex flex-column justify-content-end my-2">
-            <a class="btn btn-primary" href="{{ path('app_employee_check_vacation_requests') }}">Pregled zahtjeva</a>
+            <a class="btn btn-primary" href="{{ path('app_employee_check_vacation_requests') }}">
+                {% trans %}controller.employee.view_vacation_requests{% endtrans %}
+            </a>
         </div>
         {% endif %}
     </div>
     {% endif %}
     <div class="border p-2">
-        <h2>Pregled zahtjeva</h2>
+        <h2>
+            {% trans %}controller.employee.table_title{% endtrans %}
+        </h2>
         <table class="table align-middle">
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Od-Do</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Opis</th>
+                    <th scope="col">{% trans %}controller.employee.from_to{% endtrans %}</th>
+                    <th scope="col">{% trans %}controller.employee.status{% endtrans %}</th>
+                    <th scope="col">{% trans %}controller.employee.description{% endtrans %}</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -50,7 +71,7 @@
                     <td>{{ loop.index }}</td>
                     <td>{{ request.getFromDate|date('d.m.Y') }} - {{ request.getToDate|date('d.m.Y') }} ({{
                         request.daysRequested }})</td>
-                    <td>{{ request.getStatus }}</td>
+                    <td>{{ request.getStatus|trans }}</td>
                     <td>{{ request.getDescription }}</td>
                     <td>
                         <div class="dropdown">
@@ -58,13 +79,17 @@
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 ...
                             </button>
+                            {% if request.isRemovable %}
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                {% if request.isRemovable %}
-                                <li><a class="dropdown-item"
-                                        href="{{ path('app_vacation_request_remove', { id: request.getId }) }}">Brisanje</a>
+                                <li>
+                                    <form action="{{ path('app_vacation_request_remove', { id: request.getId })}}"
+                                        method="post">
+                                        <input class="dropdown-item" type="submit"
+                                            value="{% trans %}controller.employee.delete{% endtrans %}">
+                                    </form>
                                 </li>
-                                {% endif %}
                             </ul>
+                            {% endif %}
                         </div>
                     </td>
                 </tr>
@@ -72,7 +97,9 @@
             </tbody>
         </table>
         <div class="d-flex justify-content-end">
-            <a class="btn btn-primary" href="{{ path('app_vacation_request') }}">Novi zahtjev</a>
+            <a class="btn btn-primary" href="{{ path('app_vacation_request') }}">
+                {% trans %}controller.employee.new_request{% endtrans %}
+            </a>
         </div>
     </div>
 </div>

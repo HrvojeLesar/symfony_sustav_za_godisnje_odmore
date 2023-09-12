@@ -1,0 +1,10 @@
+admin:
+  title: Vacation
+  project: Project
+  project_team: Project team
+  team: Team
+  team_member: Team member
+  user: User
+  workplace: Workplace
+  annual_vacation: Annual Vacation
+  vacation_request: Vacation Request

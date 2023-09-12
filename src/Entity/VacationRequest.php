@@ -5,14 +5,11 @@ namespace App\Entity;
 use App\Repository\VacationRequestRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\PostUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use App\Validator\VacationRequest as VacationRequestValidator;
-use Exception;
 use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: VacationRequestRepository::class)]
@@ -229,7 +226,7 @@ class VacationRequest implements JsonSerializable
         }
     }
 
-    public function getStatus(): string
+    public function getStatus(): VacationRequestStatus
     {
         return match (true) {
             $this->isApprovedByTeamLead === false || $this->isApprovedByProjectLead === false => VacationRequestStatus::Rejected,

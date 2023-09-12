@@ -1,0 +1,22 @@
+controller:
+  employee:
+    title: Requests
+    first_name: First name
+    last_name: Last name
+    email: E-mail
+    workplace: Workplace
+    team_lead: Team lead
+    project_lead: Project lead
+    employee: Employee
+    from_to: From-To
+    status: Status
+    description: Description
+    table_title: Requests
+    project: Project
+    team: Team
+    approve: Approve
+    reject: Reject
+    available_vacation_days: Available vacation days
+    view_vacation_requests: Vacation requests
+    delete: Delete
+    new_request: New vacation request

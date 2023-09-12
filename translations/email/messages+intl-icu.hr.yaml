@@ -1,0 +1,8 @@
+email:
+  approved:
+    subject: Zahtjev za godišnji odmor odobren
+    text: >-
+      {days, plural,
+        =1 {Zahtjev za godišnji odmor u razdoblju {from}-{to} je odobren. Odobren 1 dan godišnjega.}
+        other {Zahtjev za godišnji odmor u razdoblju {from}-{to} je odobren. Odobreno # dana godišnjega.}
+      }

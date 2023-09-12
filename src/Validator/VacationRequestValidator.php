@@ -6,21 +6,23 @@ use App\Entity\AnnualVacation;
 use App\Entity\User;
 use App\Entity\VacationRequest;
 use App\Repository\AnnualVacationRepository;
+use App\Validator\VacationRequest as VacationRequestConstraint;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use UnexpectedValueException;
 
 class VacationRequestValidator extends ConstraintValidator
 {
-    public function __construct(private EntityManagerInterface $entityManager, private Security $security)
+    public function __construct(private EntityManagerInterface $entityManager, private Security $security, private TranslatorInterface $translator)
     {
     }
 
     /**
      * @param VacationRequest $value
-     * @param App\Validator\VacationRequest $constraint
+     * @param VacationRequestConstraint $constraint
      */
     public function validate($vacationRequest, Constraint $constraint): void
     {
@@ -35,14 +37,14 @@ class VacationRequestValidator extends ConstraintValidator
         $availableVacationDays = $this->availableVacationDays();
 
         if ($from > $to) {
-            $this->context->buildViolation($constraint->datesOutOfSync)->addViolation();
+            $this->context->buildViolation($constraint->getViolationString(VacationRequestValidationError::DatesOutOfSync, $this->translator))->addViolation();
         }
         if ($requestedVacationDays === 0) {
-            $this->context->buildViolation($constraint->zeroDaysRequested)->addViolation();
+            $this->context->buildViolation($constraint->getViolationString(VacationRequestValidationError::ZeroDaysRequested, $this->translator))->addViolation();
         }
         if ($requestedVacationDays > $availableVacationDays) {
             $this->context
-                ->buildViolation($constraint->notEnoughAvailableVacationDays)
+                ->buildViolation($constraint->getViolationString(VacationRequestValidationError::NotEnoughtAvailableVacationDays, $this->translator))
                 ->setParameter('{{ available }}', $availableVacationDays)
                 ->setParameter('{{ requested }}', $requestedVacationDays)
                 ->addViolation()

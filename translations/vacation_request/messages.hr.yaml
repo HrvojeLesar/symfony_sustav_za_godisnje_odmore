@@ -1,0 +1,16 @@
+vacation_request:
+  status:
+    rejected: Zahtjev odbijen
+    approved: Zahtjev odobren
+    pending_team_lead: Čekanje na odobrenje voditelja tima
+    pending_project_lead: Čekanje na odobrenje voditelja projekta
+    pending: Čekanje odobrenja
+  validator:
+    dates_out_of_sync: Datum "Do" ima vrijednost koja je ranije nego datum "Od"
+    zero_days_requested: Potrebno je zatražiti minimalno 1 dan godišnjeg odmora
+    not_enought_available_vacation_days: 'Zatraženo ({{ requested }}) je više dana godišnjeg odmora nego je dopušteno. Preostalo dana godišnjega: {{ available }}'
+
+controller:
+  vacation_request:
+    title: Novi zahtjev
+    available_vacation_days: Preostalo dana godišnjega

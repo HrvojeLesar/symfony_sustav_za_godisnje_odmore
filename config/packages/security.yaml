@@ -31,10 +31,6 @@ security:
         check_path: /api/login_check
         failure_handler: lexik_jwt_authentication.handler.authentication_failure
         success_handler: lexik_jwt_authentication.handler.authentication_success
-      form_login:
-        check_path: /api/login_check_form
-        failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        success_handler: lexik_jwt_authentication.handler.authentication_success
     api:
       pattern: ^/api
       stateless: true

@@ -1,0 +1,14 @@
+vacation_request:
+  status:
+    rejected: Request rejected
+    approved: Request approved
+    pending_team_lead: Team lead approval pending
+    pending_project_lead: Project lead approval pending
+    pending: Pending
+  validator:
+    dates_out_of_sync: Date "From" is before date "To"
+    zero_days_requested: Annual vacation length must be at least one day
+    not_enought_available_vacation_days: 'Too many vacation days requested ({{ requested }}). Available days of annual vacation: {{ available }}'
+  controller:
+    title: New request
+    available_vacation_days: Available vacation days
