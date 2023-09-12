@@ -20,3 +20,5 @@ controller:
     view_vacation_requests: Pregled zahtjeva na čekanju
     delete: Brisanje
     new_request: Novi zahtjev
+    logout: Odjava
+    back: Povratak

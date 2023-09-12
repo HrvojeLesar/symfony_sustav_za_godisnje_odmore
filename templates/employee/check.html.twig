@@ -7,56 +7,68 @@
 {% block body %}
 {% if user %}
 <div class="d-flex flex-column container">
-    <div class="d-flex flex-column border align-self-start justify-content-start my-2 p-2">
-        <div>
-            <b>
-                {% trans %}controller.employee.first_name{% endtrans %}:
-            </b>
-            <span>{{ user.firstName }}</span>
-        </div>
-        <div>
-            <b>
-                {% trans %}controller.employee.last_name{% endtrans %}:
-            </b>
-            <span>{{ user.lastName }}</span>
-        </div>
-        <div>
-            <b>
-                {% trans %}controller.employee.email{% endtrans %}:
-            </b>
-            <span>{{ user.email }}</span>
-        </div>
-        {% if user.workplace %}
-        <div>
-            <b>
-                {% trans %}controller.employee.workplace{% endtrans %}:
-            </b>
-            <span>{{ user.workplace }}</span>
-        </div>
-        {% endif %}
-        {% if user.isTeamLead %}
-        <div>
-            <b>
-                {% trans %}controller.employee.team_lead{% endtrans %}:
-            </b>
-            {% for team in leader_of_teams %}
-            {% if loop.index0 == 0 %}
-            <span>{{ team.getName }}</span>
-            {% else %}
-            <span>| {{ team.getName }}</span>
+    <div class="d-flex justify-content-between">
+        <div class="d-flex flex-column border align-self-start justify-content-start my-2 p-2">
+            <div>
+                <b>
+                    {% trans %}controller.employee.first_name{% endtrans %}:
+                </b>
+                <span>{{ user.firstName }}</span>
+            </div>
+            <div>
+                <b>
+                    {% trans %}controller.employee.last_name{% endtrans %}:
+                </b>
+                <span>{{ user.lastName }}</span>
+            </div>
+            <div>
+                <b>
+                    {% trans %}controller.employee.email{% endtrans %}:
+                </b>
+                <span>{{ user.email }}</span>
+            </div>
+            {% if user.workplace %}
+            <div>
+                <b>
+                    {% trans %}controller.employee.workplace{% endtrans %}:
+                </b>
+                <span>{{ user.workplace }}</span>
+            </div>
             {% endif %}
-            {% endfor %}
+            {% if user.isTeamLead %}
+            <div>
+                <b>
+                    {% trans %}controller.employee.team_lead{% endtrans %}:
+                </b>
+                {% for team in leader_of_teams %}
+                {% if loop.index0 == 0 %}
+                <span>{{ team.getName }}</span>
+                {% else %}
+                <span>| {{ team.getName }}</span>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if user.isProjectLead %}
+            <div>
+                <b>
+                    {% trans %}controller.employee.project_lead{% endtrans %}:
+                </b>
+            </div>
+            {% endif %}
         </div>
         {% endif %}
-        {% if user.isProjectLead %}
-        <div>
-            <b>
-                {% trans %}controller.employee.project_lead{% endtrans %}:
-            </b>
+        <div class="d-flex flex-column justify-content-between my-2">
+            <a class="btn btn-danger" href="{{ path('app_logout') }}">
+                {% trans %}controller.employee.logout{% endtrans %}
+            </a>
+            {% if user.isTeamLead or user.isProjectLead %}
+            <a class="btn btn-primary" href="{{ path('app_employee') }}">
+                {% trans %}controller.employee.back{% endtrans %}
+            </a>
+            {% endif %}
         </div>
-        {% endif %}
     </div>
-    {% endif %}
 
     {% if user.isTeamLead %}
     <div class="border p-2">

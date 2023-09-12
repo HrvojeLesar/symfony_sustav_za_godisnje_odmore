@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,5 +24,11 @@ class LoginController extends AbstractController
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
+    }
+
+    #[Route('/login', name: 'app_login_check', methods: 'POST')]
+    public function login_check(): Response
+    {
+        throw new Exception('Should be intercepted by LoginFormAuthenticator ');
     }
 }

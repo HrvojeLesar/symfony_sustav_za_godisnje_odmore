@@ -48,7 +48,9 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         $event = new LoginSuccessEvent($user);
         $this->eventDispatcher->dispatch($event, LoginSuccessEvent::class);
 
-        $targetPath = $request->request->get('_target_path');
+        /** @var string|null $lastVisited */
+        $lastVisited = $request->cookies->get('last_visited');
+        $targetPath = $lastVisited ?? $request->request->get('_target_path');
         if ($targetPath) {
             return new RedirectResponse($targetPath);
         }

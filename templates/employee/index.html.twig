@@ -42,13 +42,16 @@
                 <span>{{ user.getAvailableVacationDays }}</span>
             </div>
         </div>
-        {% if user.isTeamLead or user.isProjectLead %}
-        <div class="d-flex flex-column justify-content-end my-2">
+        <div class="d-flex flex-column justify-content-between my-2">
+            <a class="btn btn-danger" href="{{ path('app_logout') }}">
+                {% trans %}controller.employee.logout{% endtrans %}
+            </a>
+            {% if user.isTeamLead or user.isProjectLead %}
             <a class="btn btn-primary" href="{{ path('app_employee_check_vacation_requests') }}">
                 {% trans %}controller.employee.view_vacation_requests{% endtrans %}
             </a>
+            {% endif %}
         </div>
-        {% endif %}
     </div>
     {% endif %}
     <div class="border p-2">

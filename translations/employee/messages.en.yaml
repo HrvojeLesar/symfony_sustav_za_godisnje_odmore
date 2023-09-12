@@ -20,3 +20,5 @@ controller:
     view_vacation_requests: Vacation requests
     delete: Delete
     new_request: New vacation request
+    logout: Logout
+    back: Back
