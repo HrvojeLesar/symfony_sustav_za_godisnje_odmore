@@ -9,10 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api')]
+#[Route('/api', name: 'app_api')]
 class ApiEmployeeController extends AbstractController
 {
-    #[Route('/employees', name: 'app_api_employees')]
+    #[Route('/employees', name: '_employees', methods: 'GET')]
     #[Cache(public: true, maxage: 60, mustRevalidate: true)]
     public function employees(UserRepository $userRepository): Response
     {

@@ -10,9 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/employee', name: 'app_employee')]
 class EmployeeController extends AbstractController
 {
-    #[Route('/employee', name: 'app_employee')]
+    #[Route('', name: '', methods: 'GET')]
     public function index(TeamRepository $tr): Response
     {
         /** @var User $user */
@@ -25,7 +26,7 @@ class EmployeeController extends AbstractController
         ]);
     }
 
-    #[Route('/employee/check-vacation-requests', name: 'app_employee_check_vacation_requests')]
+    #[Route('/check-vacation-requests', name: '_check_vacation_requests', methods: 'GET')]
     public function checkVacationRequests(EntityManagerInterface $entityManager, VacationRequestRepository $vacationRequestRepo): Response
     {
         /** @var User $user */

@@ -18,9 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/vacation', name: 'app_vacation')]
 class VacationRequestController extends AbstractController
 {
-    #[Route('/vacation/request', name: 'app_vacation_request')]
+    #[Route('/request', name: '_request', methods: ['GET', 'POST'])]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         $vacationRequest = new VacationRequest();
@@ -78,7 +79,7 @@ class VacationRequestController extends AbstractController
         return $this->redirectToRoute('app_employee');
     }
 
-    #[Route('/vacation/project-lead-grant/{id}', name: 'app_vacation_request_project_lead_grant')]
+    #[Route('/project-lead-grant/{id}', name: '_request_project_lead_grant', methods: 'POST')]
     public function grantProjectVacationRequest(int $id, EntityManagerInterface $entityManager, VacationRequestRepository $vacationRequestRepo, MessageBusInterface $bus): Response
     {
         $vacationRequest = $this->getVacationRequest($id, $vacationRequestRepo);
@@ -88,7 +89,7 @@ class VacationRequestController extends AbstractController
         return $this->redirectToRoute('app_employee_check_vacation_requests');
     }
 
-    #[Route('/vacation/project-lead-reject/{id}', name: 'app_vacation_request_project_lead_reject')]
+    #[Route('/project-lead-reject/{id}', name: '_request_project_lead_reject', methods: 'POST')]
     public function rejectProjectVacationRequest(int $id, EntityManagerInterface $entityManager, VacationRequestRepository $vacationRequestRepo): Response
     {
         $vacationRequest = $this->getVacationRequest($id, $vacationRequestRepo);
@@ -96,7 +97,7 @@ class VacationRequestController extends AbstractController
         return $this->redirectToRoute('app_employee_check_vacation_requests');
     }
 
-    #[Route('/vacation/team-lead-grant/{id}', name: 'app_vacation_request_team_lead_grant')]
+    #[Route('/team-lead-grant/{id}', name: '_request_team_lead_grant', methods: 'POST')]
     public function grantTeamVacationRequest(int $id, EntityManagerInterface $entityManager, VacationRequestRepository $vacationRequestRepo, MessageBusInterface $bus): Response
     {
         $vacationRequest = $this->getVacationRequest($id, $vacationRequestRepo);
@@ -106,7 +107,7 @@ class VacationRequestController extends AbstractController
         return $this->redirectToRoute('app_employee_check_vacation_requests');
     }
 
-    #[Route('/vacation/team-lead-reject/{id}', name: 'app_vacation_request_team_lead_reject')]
+    #[Route('/team-lead-reject/{id}', name: '_request_team_lead_reject', methods: 'POST')]
     public function rejectTeamVacationRequest(int $id, EntityManagerInterface $entityManager, VacationRequestRepository $vacationRequestRepo): Response
     {
         $vacationRequest = $this->getVacationRequest($id, $vacationRequestRepo);

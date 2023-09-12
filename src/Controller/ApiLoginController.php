@@ -8,9 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+#[Route('/api', name: 'app_api')]
 class ApiLoginController extends AbstractController
 {
-    #[Route('/api/login', name: 'app_api_login')]
+    #[Route('/login', name: '_login')]
     public function index(AuthenticationUtils $authenticationUtils): Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -21,13 +22,13 @@ class ApiLoginController extends AbstractController
         ]);
     }
 
-    #[Route('/api/login_check', name: 'app_api_login_check')]
+    #[Route('/login_check', name: '_login_check')]
     public function loginCheck(): Response
     {
         throw new Exception('form_login in security.yaml should intercept this api call.');
     }
 
-    #[Route('/api/login_check_form', name: 'app_api_login_check_form')]
+    #[Route('/login_check_form', name: '_login_check_form')]
     public function loginCheckForm(): Response
     {
         throw new Exception('form_login in security.yaml should intercept this api call.');
