@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exceptions\GoogleAuthFailedException;
 use App\Exceptions\InvalidStateException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -78,7 +79,11 @@ class GoogleOAuthService
     public function handleCallback(): void
     {
         $this->validateState();
-        $this->exchangeCode();
+        $userInfo = $this->exchangeCode();
+        if (! isset($userInfo['email'])) {
+            throw new GoogleAuthFailedException();
+        }
+        $this->session->set('googleOAuthUserEmail', $userInfo['email']);
     }
 
     protected function validateState(): void
@@ -88,7 +93,7 @@ class GoogleOAuthService
         }
     }
 
-    protected function exchangeCode(): void
+    protected function exchangeCode(): mixed
     {
         $code = $this->request->get('code');
         $response = $this->httpClient->request(
@@ -105,6 +110,30 @@ class GoogleOAuthService
                 ]
             ]
         );
-        $responseContent = json_decode($response->getContent());
+
+        $accessInfo = json_decode($response->getContent(), true);
+        $response = $this->httpClient->request(
+            'GET',
+            $this->userInfoEndpoint,
+            [
+                'headers' => ['Authorization' => 'Bearer '.$accessInfo['access_token']],
+            ]
+        );
+
+        $userInfo = json_decode($response->getContent(), true);
+
+        return $userInfo;
+    }
+
+    /**
+    * @throws GoogleAuthFailedException
+    */
+    public function getEmail(): string
+    {
+        $email = $this->session->get('googleOAuthUserEmail');
+        if (is_null($email)) {
+            throw new GoogleAuthFailedException();
+        }
+        return $email;
     }
 }

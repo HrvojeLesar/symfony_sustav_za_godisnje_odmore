@@ -6,7 +6,7 @@
 
 {% block body %}
 <div class="d-flex justify-content-center container mt-5">
-    <form class="p-3 border" action="{{ path('app_login_check') }}" method="post" style="max-width: 300px;">
+    <form class="p-3 border" action="{{ path('app_login') }}" method="post" style="max-width: 300px;">
         <h1 class="h3 mb-3 fw-normal">
             {% trans %}controller.login.title{% endtrans %}
         </h1>
@@ -33,7 +33,9 @@
         <button class="btn btn-primary w-100" type="submit">
             {% trans %}controller.login.login{% endtrans %}
         </button>
+        <a class="btn btn-primary w-100 mt-3" href="{{ path('app_google_login' )}}">
+            {% trans %}controller.login.google_login{% endtrans %}
+        </a>
     </form>
-    <a class="btn btn-primary" href="{{ path('app_google_login' )}}">Google Login</a>
 </div>
 {% endblock %}

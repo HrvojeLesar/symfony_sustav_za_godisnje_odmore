@@ -4,3 +4,4 @@ controller:
     email: E-mail
     password: Lozinka
     login: Prijava
+    google_login: Prijava putem google računa

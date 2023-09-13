@@ -34,7 +34,7 @@ final class Version20230830073551 extends AbstractMigration
                 last_name TEXT NOT NULL,
                 email VARCHAR(255) NOT NULL,
                 workplace_id INT REFERENCES workplace(id),
-                password TEXT NOT NULL,
+                password TEXT,
                 roles JSON,
                 UNIQUE (email(255))
             )

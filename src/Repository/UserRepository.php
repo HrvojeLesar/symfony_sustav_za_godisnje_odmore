@@ -133,4 +133,21 @@ class UserRepository extends ServiceEntityRepository
         });
         return $vacationRequests;
     }
+
+    public function getUserByEmail(string $email): User|null
+    {
+        $results = $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.email = :email')
+            ->andWhere('u.password IS NULL')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getResult();
+        if (count($results) !== 1) {
+            return null;
+        }
+        return $results[0];
+    }
 }

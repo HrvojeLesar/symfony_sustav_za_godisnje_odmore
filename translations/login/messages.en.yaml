@@ -4,3 +4,4 @@ controller:
     email: E-mail
     password: Password
     login: Login
+    google_login: Login with Google

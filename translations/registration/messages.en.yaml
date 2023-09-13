@@ -1,3 +1,4 @@
 controller:
   registration:
     title: Register
+    google_reg: Register using Google account
