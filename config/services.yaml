@@ -26,3 +26,11 @@ services:
     tags: [ 'app.exclude_role_tag' ]
   App\Service\RolesService:
     tags: [ 'app.exclude_role_tag' ]
+  App\Service\GoogleOAuthService:
+    arguments:
+      $clientId: '%env(GOOGLE_OAUTH_CLIENT_ID)%'
+      $clientSecret: '%env(GOOGLE_OAUTH_CLIENT_SECRET)%'
+      $authEndpoint: '%env(GOOGLE_OAUTH_AUTH_ENDPOINT)%'
+      $tokenEndpoint: '%env(GOOGLE_OAUTH_TOKEN_ENDPOINT)%'
+      $userInfoEndpoint: '%env(GOOGLE_OAUTH_USER_INFO_ENDPOINT)%'
+      $redirectUri: '%env(GOOGLE_OAUTH_REDIRECT_URI)%'

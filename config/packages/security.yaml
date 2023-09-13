@@ -64,6 +64,9 @@ security:
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
     - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/google/login, roles: PUBLIC_ACCESS }
+    - { path: ^/google/callback, roles: PUBLIC_ACCESS }
+    - { path: ^/google/finish, roles: PUBLIC_ACCESS }
     - { path: ^/register, roles: PUBLIC_ACCESS }
     - { path: ^/admin, roles: PUBLIC_ACCESS }
     - {
