@@ -70,6 +70,9 @@ class UserRepository extends ServiceEntityRepository
             $item->expiresAfter(60);
             return $this->findAll();
         });
+        foreach ($users as &$user) {
+            $user = $this->getEntityManager()->find(User::class, $user->getId());
+        }
         return $users;
     }
 

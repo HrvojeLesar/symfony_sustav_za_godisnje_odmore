@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use App\Service\RandomUserService;
+use App\Service\RolesService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,5 +42,17 @@ class ApiEmployeeController extends AbstractController
         $vacationRequests = $userRepository->getUserVacationRequestsCached($id);
 
         return $this->json($vacationRequests);
+    }
+
+    #[Route('/employee/random-user', name: '_employee_random_user', methods: 'GET')]
+    public function employeeRandom(RandomUserService $randomUserService): Response
+    {
+        return $this->json($randomUserService->getRandomUser());
+    }
+
+    #[Route('/employee/random-role', name: '_employee_random_role', methods: 'GET')]
+    public function randomRole(RolesService $rolesService): Response
+    {
+        return $this->json($rolesService->getRandomRole());
     }
 }
